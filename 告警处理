@@ -1,0 +1,13 @@
+#dlisncons01 [Windows]
+#C:  FS = 83.65% (Threshold = 80)
+	Free space on disk = 16.29 GB (Threshold = 128 MB)
+	Used space on disk = 83.39 GB
+	Reserved space on disk = 0.00 GB
+	DiskType = NTFS
+
+dlisncons02 [Windows] D:  FS = 82.48% (Threshold = 80)
+	Free space on disk = 17.51 GB (Threshold = 128 MB)
+	Used space on disk = 82.47 GB
+	Reserved space on disk = 0.00 GB
+	DiskType = NTFS
+

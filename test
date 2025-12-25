@@ -1,0 +1,45 @@
+
+
+dladcsca01
+dldainfmfcon02
+dldainfsecon01
+dldainfsecon02
+dlisncons21
+dlisnsqldbdev03
+DLL4TEST1
+DLL4TEST2
+dlmmscon01
+dlobmcon01
+dlveemm01
+dlveemmmfg01
+dlveempmfg02
+dlveempmis02
+dlveempsec01
+dlveempsec02
+dlwin10test1809
+dlwin10test1809
+DLWindows2022Te
+DLWindows2022Te
+DLWindows2022Te
+
+/data on dlisnmfgvrepo01 
+/data on dlisnmisvrepo01
+
+/data on dlisnmfgvrepo01 [FileSystem]	/data  FS = 82.69%
+/data on dlisnmisvrepo01 [FileSystem]	/data  FS = 82.69%
+	
+	Free space on disk = 34.59 GB (Threshold = 128 MB)
+	Used space on disk = 165.30 GB
+	Reserved space on disk = 0.00 GB
+	DiskType = xfs
+	Inode utilization (%) = 0.00 (Threshold = 98)
+
+dlffdcweb02 [Windows]
+Memory utilization = 85.74 % (Threshold = 80)
+Available memory = 9.13 GB
+
+已经通知业务人员，后续进行处理。
+
+-----------------------------------------------------------------
+git config --global user.name "Chen Xuewen"
+git config --global user.email chenxuewen@aliyun.com

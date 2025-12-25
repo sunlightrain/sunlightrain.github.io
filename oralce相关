@@ -1,0 +1,286 @@
+EUCC Printer（cluster）	10.68.39.101	10.68.39.102
+Printout Security	10.68.42.51	10.68.42.52
+Maxguage FOR SQL Server	10.68.39.156	10.68.39.157
+Infra SQL Server	10.68.39.145	10.68.39.146
+PDL Manager	10.68.39.115	10.68.39.116
+PowerBI	10.68.39.111	10.68.39.112
+Cardkey System	10.68.42.55	10.68.42.56
+
+
+
+------------------------
+
+
+
+docker run -d -p 8081:8081 --name nexus -v /some/dir/nexus-data:/nexus-data sonatype/nexus3
+
+
+------------------------
+#db1
+nmcli connection show
+nmcli connection add type ethernet con-name ens224 ifname ens224
+nmcli connection modify ens224 ipv4.addresses 10.250.161.231/24
+nmcli connection modify ens224 ipv4.method manual
+nmcli connection up ens224
+
+------------------------
+#db2
+nmcli connection show
+nmcli connection add type ethernet con-name ens224 ifname ens224
+nmcli connection modify ens224 ipv4.addresses 10.250.161.232/24
+nmcli connection modify ens224 ipv4.method manual
+nmcli connection up ens224
+
+---------
+#db1
+nmcli connection show
+nmcli connection add type ethernet con-name ens256 ifname ens256
+nmcli connection modify ens256 ipv4.addresses 10.250.131.233/24
+nmcli connection modify ens256 ipv4.method manual
+nmcli connection up ens256
+
+-----------
+#db2
+nmcli connection show
+nmcli connection add type ethernet con-name ens256 ifname ens256
+nmcli connection modify ens256 ipv4.addresses 10.250.131.234/24
+nmcli connection modify ens256 ipv4.method manual
+nmcli connection up ens256
+------
+#修改MTU
+#查看当前连接名称
+nmcli connection show
+
+NAME    UUID                                  TYPE      DEVICE
+ens192  03da7500-2101-c722-2438-d0d006c28c73  ethernet  ens192
+ens224  d05b495f-0904-4919-b29d-4075c50b296e  ethernet  ens224
+ens256  4ec8ecb7-76da-4644-8aec-8ce42b083df9  ethernet  ens256
+
+nmcli connection modify "ens224" 802-3-ethernet.mtu 9000
+nmcli connection modify "ens256" 802-3-ethernet.mtu 9000
+nmcli connection down "ens224"
+nmcli connection down "ens256"
+nmcli connection up "ens224"
+nmcli connection up "ens256"
+nmcli device show | grep MTU
+
+--------------
+
+chown -R oracle:dba /oratrace
+
+
+------------------------
+
+pvcreate /dev/sdb
+vgcreate datavg /dev/sdb
+lvcreate -l 50%FREE -n dbaworklv datavg
+lvcreate -l 100%FREE -n oraarchlv datavg
+mkfs.xfs /dev/mapper/datavg-dbaworklv
+mkfs.xfs /dev/mapper/datavg-oraarchlv
+mkdir /dbawork
+mkdir /oraarch
+cat << EOF >> /etc/fstab
+/dev/mapper/datavg-dbaworklv  /dbawork      xfs     defaults        0 0
+/dev/mapper/datavg-oraarchlv  /oraarch      xfs     defaults        0 0
+EOF
+mount -a
+
+chown -R oracle:dba /dbawork
+chown -R oracle:dba /oraarch
+chown -R oracle:dba /orahome
+chown -R oracle:dba /oragrid
+chown -R oracle:dba /oratrace
+
+chown -R oracle:dba /NAS_DB_BACKUP
+
+
+------------------------------
+请参考无锡dba测试库环境的配置：
+
+/dbawork                       100G       oracle:dba 775       
+/orahome                       100G       oracle:dba 755       
+/oratrace                      100G       oracle:dba 775       
+/oragrid                       100G       oragrid:dba 755
+
+chmod 755 /home
+
+chmod 755 /dbawork
+chmod 755 /orahome
+chmod 755 /oratrace
+chmod 755 /oragrid
+chmod 755 /oraarch
+
+
+
+--OS 参数
+kernel.sem                        250 32000 100 1024     
+kernel.shmmni                     4096                   
+kernel.shmmax                     364320600883           
+kernel.shmall                     88945459               
+kernel.panic_on_oops              1                      
+vm.swappiness                     10                     
+fs.file-max                       6815744                
+fs.aio-max-nr                     49152000               
+net.ipv4.ip_local_port_range      9000 65500             
+net.core.rmem_default             16777216               
+net.core.rmem_max                 16777216               
+net.core.wmem_default             16777216               
+net.core.wmem_max                 16777216               
+vm.min_free_kbytes                4194304                
+kernel.randomize_va_space         0                      
+net.ipv4.conf.default.rp_filter   2						 
+
+
+
+--OS用户  griddb!11
+
+oracle OS User                 >>> oracle:x:777:777::/orahome:/bin/bash
+oragrid OS User                >>> oragrid:x:778:777::/oragrid:/bin/bash
+griddb!11
+
+--ASM DISK 
+
+SYSTEM :   3 ea
+  DATA :   8 ea
+  REDO :   8 ea
+  
+MIRROR :   8 ea
+   FRA :   4 ea
+
+[CHECK] >>> Fdisk    ASM Disk UDEV Use       Size      Permission
+
+-----------------------------------------------------------------
+
+      /dev/wxpmesdr_asm/asmd01     262142 MB    oragrid:dba     660       250G
+      /dev/wxpmesdr_asm/asmd02     262142 MB    oragrid:dba     660       250G
+      /dev/wxpmesdr_asm/asmd03     262142 MB    oragrid:dba     660       250G
+      /dev/wxpmesdr_asm/asmd04     262142 MB    oragrid:dba     660       250G
+      /dev/wxpmesdr_asm/asmd05     262142 MB    oragrid:dba     660       250G
+      /dev/wxpmesdr_asm/asmd06     262142 MB    oragrid:dba     660       250G
+      /dev/wxpmesdr_asm/asmd07     262142 MB    oragrid:dba     660       256G
+      /dev/wxpmesdr_asm/asmd08     262142 MB    oragrid:dba     660       256G
+      /dev/wxpmesdr_asm/asmd09     262142 MB    oragrid:dba     660       256G
+      /dev/wxpmesdr_asm/asmd10     262142 MB    oragrid:dba     660       256G
+      /dev/wxpmesdr_asm/asmd11     262142 MB    oragrid:dba     660       256G
+      /dev/wxpmesdr_asm/asmd12     262142 MB    oragrid:dba     660       256G
+	  
+
+      /dev/wxpmesdr_asm/asmf01     131070 MB    oragrid:dba     660       128G
+      /dev/wxpmesdr_asm/asmf02     131070 MB    oragrid:dba     660       128G
+      /dev/wxpmesdr_asm/asmf03     131070 MB    oragrid:dba     660       128G
+      /dev/wxpmesdr_asm/asmf04     131070 MB    oragrid:dba     660       128G
+	  
+
+      /dev/wxpmesdr_asm/asmm01      32766 MB    oragrid:dba     660       32G
+      /dev/wxpmesdr_asm/asmm02      32766 MB    oragrid:dba     660       32G
+      /dev/wxpmesdr_asm/asmm03      32766 MB    oragrid:dba     660       32G
+      /dev/wxpmesdr_asm/asmm04      32766 MB    oragrid:dba     660       32G
+      /dev/wxpmesdr_asm/asmm05      32766 MB    oragrid:dba     660       32G
+      /dev/wxpmesdr_asm/asmm06      32766 MB    oragrid:dba     660       32G
+      /dev/wxpmesdr_asm/asmm07      32766 MB    oragrid:dba     660       32G
+      /dev/wxpmesdr_asm/asmm08      32766 MB   	oragrid:dba     660       32G
+
+      /dev/wxpmesdr_asm/asmr01      32766 MB    oragrid:dba     660       32G
+      /dev/wxpmesdr_asm/asmr02      32766 MB    oragrid:dba     660       32G
+      /dev/wxpmesdr_asm/asmr03      32766 MB    oragrid:dba     660       32G
+      /dev/wxpmesdr_asm/asmr04      32766 MB    oragrid:dba     660       32G
+      /dev/wxpmesdr_asm/asmr05      32766 MB    oragrid:dba     660       32G
+      /dev/wxpmesdr_asm/asmr06      32766 MB    oragrid:dba     660       32G
+      /dev/wxpmesdr_asm/asmr07      32766 MB    oragrid:dba     660       32G
+      /dev/wxpmesdr_asm/asmr08      32766 MB    oragrid:dba     660       32G
+
+      /dev/wxpmesdr_asm/asms01      10238 MB    oragrid:dba     660       10G
+      /dev/wxpmesdr_asm/asms02      10238 MB    oragrid:dba     660       10G
+      /dev/wxpmesdr_asm/asms03      10238 MB    oragrid:dba     660       10G
+
+
+
+--CPU
+
+Architecture:        x86_64
+CPU op-mode(s):      32-bit, 64-bit
+Byte Order:          Little Endian
+CPU(s):              8  #
+On-line CPU(s) list: 0-7
+Thread(s) per core:  1
+Core(s) per socket:  1
+Socket(s):           8
+NUMA node(s):        1
+Vendor ID:           GenuineIntel
+CPU family:          6
+Model:               85
+Model name:          Intel(R) Xeon(R) Platinum 8160 CPU @ 2.10GHz
+Stepping:            4
+CPU MHz:             2095.077
+BogoMIPS:            4190.15
+Hypervisor vendor:   VMware 
+--内存   = 64GB #
+
+
+sqlplus / as sysdba
+
+
+sqlplus testuser/DL_infra123@//dlwmsdbdev01.corp.hynix-dl.com:1521/WMSDEV
+sqlplus testuser/DL_infra123@//10.68.39.236:1521/WMSDEV
+
+sqlplus oracle/Hynixdl@123@//10.68.39.236:1521/WMSDEV
+Hynixdl@123
+
+
+
+system/griddb#11@
+sqlplus system/griddb#11@//10.68.39.236:1521/WMSDEV
+
+
+
+CREATE USER testuser IDENTIFIED BY DL_infra123;
+
+grant connect, resource to testuser;
+
+SELECT username FROM dba_users;
+
+-------------------------------------------
+
+1. 查看当前用户
+SELECT USER FROM dual;
+2. 查看当前用户拥有的系统权限
+SELECT * FROM USER_SYS
+3. 查看当前用户拥有的对象权限
+SELECT * FROM USER_TAB_PRIVS;
+4. 查看角色
+SELECT * FROM USER_ROLE_PRIVS;
+
+----------------------------------------------
+1. 确认当前 Service Name
+SELECT value FROM v$parameter WHERE name = 'service_names';
+2. 修改 Service Name
+ALTER SYSTEM SET service_names='HyMMS' SCOPE=BOTH;
+3. 重启监听器
+lsnrctl reload
+
+---------------------------------------
+请帮忙创建DBA权限的用户
+hymmsdbdev/Hymms2025!
+
+CREATE USER hymmsdbdev IDENTIFIED BY "Hymms2025!";
+ 
+GRANT CREATE SESSION TO hymmsdbdev;
+
+ALTER USER hymmsdbdev ACCOUNT UNLOCK;
+
+GRANT CONNECT, RESOURCE, DBA TO hymmsdbdev;
+------------------------------------------------
+
+
+
+#登录测试
+sqlplus hymmsdbdev/"Hymms2025!"@//10.68.39.236:1521/HyMMS
+
+
+-- 查看DBA 
+SELECT GRANTEE FROM DBA_ROLE_PRIVS WHERE GRANTED_ROLE = 'DBA';
+-- 查看角色与系统权限
+SELECT * FROM dba_role_privs WHERE grantee='HYMMSDBDEV';
+
+----------------------------------------------------------
+
