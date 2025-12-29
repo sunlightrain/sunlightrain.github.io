@@ -3,6 +3,9 @@
 # opcagt -cleanstart
 
 
+
+
+
 OBM 
 1、OBMapp02 Failed to invoke getCache
 2、ESXI down 告警无法发出。
@@ -17,4 +20,5 @@ OBM
 6、Maxgauge SMS 发送无锡收到，大连收不到。检查OBM和Maxgauge配置，确认无误。
 7、OBM告警策略，10分钟之内发3次，之后每10分钟发一次，直到告警解除。
 8、CardKeyDB 宕机之后没有发出告警。
+9、CardkeyDB02 OBM agent 无法启动。
 

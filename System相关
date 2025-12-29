@@ -1,0 +1,146 @@
+1.在11月21号之前的VM,依旧使用8.6的模板创建。
+
+
+显示当前连接到本机的 SMB 会话，包括用户名、客户端 IP、连接时间等。
+使用 net session
+如果你想查看本机当前挂载的 CIFS 共享（包括其他用户的）
+net use
+
+
+此外，如果您收到创建服务器的请求，您需要默认双重配置，如果不可能，您需要确认原因。
+残疾时的应对方案也应该考虑。
+OS备份将由Infra基本执行，为此需要确认相应的服务等级。
+另外，确认APP是否需要备份，必要时安装Veeam Agent来执行File Backup。
+
+
+
+文件反映
+
+system list
+ip list
+
+生成VM的顺序
+
+确认VM创建信息
+请求创建VM
+
+VM 生成确认
+Check Script
+	Win - PS1
+	Linux - sh
+		scp -rp 10.68.41.122:/tmp/linux_check_250916.sh /tmp/linux_check_250916.sh
+		scp -rp 10.68.38.122:/tmp/linux_check_250916.sh /tmp/linux_check_250916.sh
+		sed -i 's/\r$//' linux_check_250916.sh
+
+必要的确认工作
+Account 设置
+win - AD 向负责人请求生成
+Linux - VM 生成时请VM负责人一同请求
+Disk 확인
+볼륨 사이즈/타입/마운트 포인트/fstab 등 
+Permission(User Account)
+Chrony 설정 확인
+DL - Corp AD.
+WX - Branch AD.
+DNS 확인
+Agent 설치
+OBM
+Ontune
+SSR
+Maxgauge (DB서버의 경우)
+L4 DSR Setting
+
+작업 명령
+
+Linux APP Account 추가
+groupadd -g 1002 app  
+useradd -g 1002 -u 1002 -s /bin/bash app
+
+groupadd -g 1002 app  
+useradd -g 1002 -u 1002 -s /bin/bash app
+
+
+
+Data Disk 추가
+fdisk -l |grep "/dev/sd"
+fdisk /dev/sdb
+  n > p > 1 > Enter > Enter > t > 8e(Linux LVM) > w
+pvcreate /dev/sdb1
+vgcreate vg_data /dev/sdb1
+lvcreate -l +100%FREE -n lv_data vg_data
+
+mkfs.xfs /dev/mapper/vg_data-lv_data
+mkdir /data1
+chown -R app:app /data1
+
+mount -a
+
+vi /etc/fstab
+/dev/mapper/vg_data-lv_data /data1 xfs defaults 0 0
+
+
+Chrony 확인 및 변경
+chronyc sources
+vi /etc/chrony.conf
+  server 10.68.56.21 iburst
+  server 10.68.56.22 iburst
+systemctl restart chronyd.service
+systemctl status chronyd.service
+
+
+-------------------------------------
+#nameserver
+10.68.121.7    
+10.68.121.8
+
+
+
+#### OBM L4 IP ####
+10.68.40.130    dlobm.hynix-dl.com  dlobm
+
+#### OBM L4 IP ####
+172.29.38.16    wxobm.skhynix.com.cn
+
+
+#### MMS L4 IP ####
+10.68.40.133    dlmms.hynix-dl.com
+
+#### OBM App Server ####
+#10.68.40.130    dlobmapp01.corp.hynix-dl.com    dlobmapp01
+#10.68.40.132    dlobmapp02.corp.hynix-dl.com    dlobmapp02
+10.68.40.131    dlobmapp01
+10.68.40.132    dlobmapp02
+
+#### OBM DB Server ####
+10.68.39.131    dlobmdb01
+10.68.39.132    dlobmdb02
+
+#### OO Server ####
+10.68.38.139    dlobmoo01
+
+
+10.68.38.133	dlitbpslog01
+10.68.38.134	dlitbpsdev01
+
+
+----------------------------------
+
+1.VMware虚拟化平台巡检状态正常。
+2.MMS项目信息收集整理。
+3.ITBPS安装Agent(SSR/OBM/Ontune)
+4.OBM培训。
+5.IPBPS
+
+
+
+10.250.131.100:/dlgitlab_backup_01 /mnt/backup nfs defaults,_netdev,noatime,bg,intr,tcp,actimeo=1800 0 0
+
+groupadd -g 1002 gitlabadmin
+useradd -g 1002 -u 1002 -s /bin/bash gitlabadmin
+chown -R gitlabadmin:gitlabadmin /data
+
+---------------
+esxcli system snmp set --communities public
+esxcli system snmp set --targets=10.68.40.131@161/public
+esxcli system snmp get
+esxcli system snmp test

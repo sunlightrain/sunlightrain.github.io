@@ -1,0 +1,9 @@
+id,task,priority,owner,deadline,status
+1,修复 WSUS 更新失败（Windows 2016/2022）,High,Windows 组 / 待分配,2026-01-12,In Progress
+2,统一 ESXi 磁盘模式并完成受影响 VM 迁移,High,虚拟化组 / 待分配,2026-01-26,Not Started
+3,OBM 监控平台问题（厂商现场处理）,High,监控组 / 待分配,2026-01-19,Not Started
+4,scada 区域 WSUS 更新失败（3台）,Medium,Windows 组 / 待分配,2026-01-12,Not Started
+5,恢复 dllogwin11 计划任务并验证日志收集,Medium,日志组 / 待分配,2026-01-05,Not Started
+6,完成 RHEL8.10 模板与基线,Medium,模板组 / 待分配,2026-01-12,Not Started
+7,DL MMS 项目信息收集与里程碑制定,Medium,项目组 / 待分配,2026-01-31,Not Started
+8,导出月度汇总与结构化待办（CSV/MD）,Low,文档/运维组 / 待分配,2026-01-03,Not Started
