@@ -21,4 +21,29 @@ OBM
 7、OBM告警策略，10分钟之内发3次，之后每10分钟发一次，直到告警解除。
 8、CardKeyDB 宕机之后没有发出告警。
 9、CardkeyDB02 OBM agent 无法启动。
+10、NDTMWIKISQLM 设置为91%-100% 报警。
+
+1.OpenText account
+2.OA agent install 错误（cardkeyDB02、dlhymmsweb01、dlhymmsweb02、dlhymmswas01、dlhymmswas02、dlhymmsdb01、dlhymmsdb02）
+3.ESXi宕机未发出报警(VMware)
+4.Maxgauge Log first line
+5.Server HW solution
+6.NMS 
+7.Policy review
+
+长期屏蔽的告警需要在OBM中屏蔽，避免启用MMS告警PM功能。
+
+
+#dlisncons01 [Windows]
+#C:  FS = 83.65% (Threshold = 80)
+	Free space on disk = 16.29 GB (Threshold = 128 MB)
+	Used space on disk = 83.39 GB
+	Reserved space on disk = 0.00 GB
+	DiskType = NTFS
+
+dlisncons02 [Windows] D:  FS = 82.48% (Threshold = 80)
+	Free space on disk = 17.51 GB (Threshold = 128 MB)
+	Used space on disk = 82.47 GB
+	Reserved space on disk = 0.00 GB
+	DiskType = NTFS
 
