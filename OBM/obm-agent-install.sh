@@ -46,15 +46,20 @@ INFO:    Certificate request has been successfully triggered.
 #更改短主机名
 #1. Download
 wget -d -r -np -nd http://10.68.37.105/iso/app/linux/obm/package/ -P /tmp/obm/1.0/
+cd /tmp/obm/1.0/
+unzip oa_media_Linux4.18_X64.zip
 #2. unzip当前软件压缩包
 #3. 运行安装脚本，确认hosts文件已添加解析，client和OBM都需要
-sh /tmp/Linux_x64*/oainstall.sh -i -a -s dlobm.hynix-dl.com
+sh oainstall.sh -i -a -s dlobm.hynix-dl.com
 #4. 验证运行状态  /opt/OV/bin
 ovc -status
 opcagt -status
 #5. 更改短主机名
-ovconfchg -ns xpl.net -set LOCAL_NODE_NAME <hostname>​
-ovconfchg -ns eaagt -set OPC_NODE_NAME <hostname>
+export PATH=$PATH:/opt/OV/bin
+ovcert -list
+ovconfchg -ns xpl.net -set LOCAL_NODE_NAME $HOSTNAME
+ovconfchg -ns eaagt -set OPC_NODE_NAME $HOSTNAME
+ovcert -certreq
 #6. 重启服务
 opcagt -cleanstart
 
@@ -63,6 +68,7 @@ opcagt -cleanstart
 1、已安装GUN wget;下载安装包
 .\wget -d -r -np -nd http://10.68.37.105/iso/app/windows/obm/package/ -P c:\temp\obm\1.0\
 2、添加hosts互相解析
+10.68.40.130 dlobm.hynix-dl.com
 3、手动解压zip,进入安装目录
 4、运行安装脚本
 cscript.exe .\oainstall.vbs -i -a -s dlobm.hynix-dl.com
