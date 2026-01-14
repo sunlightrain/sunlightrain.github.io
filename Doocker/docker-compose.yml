@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  stor2rrd:
+    image: xorux/stor2rrd:latest
+    container_name: stor2rrd
+    restart: unless-stopped
+    ports:
+      - "80:80"         # 主机 80 → 容器 80（Web UI）
+      # 如需 SSH 访问（默认用户 stor2rrd / 初始密码 xorux4you），可额外放开 22 端口：
+      # - "2222:22"
+    environment:
+      # 设置容器时区（示例，按需改为 Asia/Shanghai 或你的时区）
+      TIMEZONE: "Asia/Shanghai"     # 官方支持通过 TIMEZONE 设置时区
+      # 若作为 XorMon 后端使用，则启用：
+      # XORMON: "1"                  # 官方说明的 XORMON 开关
+    volumes:
+      # 将应用数据持久化到命名卷，容器内路径固定为 /home/stor2rrd 官方建议
+      - stor2rrd-data:/home/stor2rrd
+    # 可选：限制资源
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: "2"
+    #       memory: "4g"
+
+volumes:
+  stor2rrd-data:
+    driver: local
