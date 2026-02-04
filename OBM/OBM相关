@@ -47,3 +47,77 @@ dlisncons02 [Windows] D:  FS = 82.48% (Threshold = 80)
 	Reserved space on disk = 0.00 GB
 	DiskType = NTFS
 
+服务器重启告警屏蔽
+重启之后服务查看
+
+OBM 如何开CASE。
+
+
+Upload the Operations Agent media.​
+Media Location: dlobmapp01:/data01/Binary/OA_ZIP_MEDIA/<OS>.zip​
+Log on to the node as root.​
+# scp dlobmapp01:/data01/Binary/OA_ZIP_MEDIA/Linux_x64*.zip /tmp​
+
+Check communicate with management server.​
+If the management server cannot be found, add it in the /etc/hosts file.​
+### OBM Management Server​
+10.68.40.130	  dlobm.Hynix-dl.com​
+
+Extrat zip file and run the following command to install​
+# unzip /tmp/Linux_x64*​
+# sh /tmp/Linux_x64*/oainstall.sh -i -a -s dlobm.Hynix-dl.com​
+
+To communicate with OBM using short name, setting the LOCAL_NODE_NAME ​
+
+
+#./export PATH=$PATH:/opt/OV/bin​
+
+#./ovconfchg -ns xpl.net -set LOCAL_NODE_NAME <hostname>​
+#./ovconfchg -ns eaagt -set OPC_NODE_NAME <hostname>​
+
+Restart OA Service​
+#./opcagt -cleanstart
+
+Check monitoring-related processes​
+  # /opt/OV/bin/ovc –status​
+
+Start/stop monitoring-related processes​
+  # /opt/OV/bin/ovc -kill​
+  # /opt/OV/bin/ovc –start​
+
+Check the all OA process​
+  #/opt/OV/bin/opcagt –status​
+​
+Start/stop the all OA process​
+  # /opt/OV/bin/opcagt -kill​
+  # /opt/OV/bin/opcagt –start​
+​
+Restart the all OA process after deleting the monitoring cache file.​
+  # /opt/OV/bin/opcagt -cleanstart 
+  
+
+Windows
+
+  # ovconfchg -ns xpl.net -set LOCAL_NODE_NAME <hostname>​
+# ovconfchg -ns eaagt -set OPC_NODE_NAME <hostname>
+
+
+ovcodautil -ping -n dlobm.hynix-dl.com
+./ovcodautil -ping -n dlobm.hynix-dl.com
+
+opcagt -version
+ovc -status​
+opcagt 
+
+
+
+netstat -anop
+
+/opt/OV/bin/ovcert -list
+  163  [2025-11-07 14:40:44] [root]  /opt/OV/bin/ovconfget
+  164  [2025-11-07 14:41:50] [root]  /opt/OV/bin/ovcert -certreq
+  165  [2025-11-07 14:42:34] [root]  /opt/OV/bin/opcagt -cleanstart
+  166  [2025-11-07 14:42:55] [root]  /opt/OV/bin/opcagt -status
+  167  [2025-11-07 14:44:11] [root]  /opt/OV/bin/ovcert -list
+
+

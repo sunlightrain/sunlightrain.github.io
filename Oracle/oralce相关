@@ -284,3 +284,34 @@ SELECT * FROM dba_role_privs WHERE grantee='HYMMSDBDEV';
 
 ----------------------------------------------------------
 
+
+
+yum groupinstall "Server with GUI" -y
+systemctl set-default graphical
+reboot
+yum install tigervnc-server.x86_64
+
+
+
+systemctl start NetworkManager-dispatcher.service
+systemctl start NetworkManager-wait-online.service
+
+systemctl enable NetworkManager-dispatcher.service
+systemctl enable NetworkManager-wait-online.service
+
+---
+--ASM DISK 
+
+SYSTEM :   3 ea
+  DATA :   12 ea
+  REDO :   8 ea
+MIRROR :   8 ea
+   FRA :   4 ea
+
+ 32GB*8EA  
+
+SYSTEM :   3 ea  10GB*3EA 
+  DATA :   8 ea  128GB*8EA
+  REDO :   4 ea  32GB*4EA 
+MIRROR :   4 ea  32GB*4EA 
+---

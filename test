@@ -22,24 +22,84 @@ DLWindows2022Te
 DLWindows2022Te
 DLWindows2022Te
 
-/data on dlisnmfgvrepo01 
-/data on dlisnmisvrepo01
 
-/data on dlisnmfgvrepo01 [FileSystem]	/data  FS = 82.69%
-/data on dlisnmisvrepo01 [FileSystem]	/data  FS = 82.69%
-	
-	Free space on disk = 34.59 GB (Threshold = 128 MB)
-	Used space on disk = 165.30 GB
-	Reserved space on disk = 0.00 GB
-	DiskType = xfs
-	Inode utilization (%) = 0.00 (Threshold = 98)
 
-dlffdcweb02 [Windows]
-Memory utilization = 85.74 % (Threshold = 80)
-Available memory = 9.13 GB
+dlsansw01	10.68.47.101
+dlsansw02	10.68.47.102
+F68_P_Fabric_42A	10.160.33.182
+F68_P_Fabric_42B	10.160.33.183
+PMAX2000_MMCSA	10.68.47.103
+PMAX2000_MMCSB	10.68.47.104
+PMAX2000_eMGMTA	10.68.47.105
+PMAX2000_eMGMTB	10.68.47.106
+PMAX2500_MMCSA	10.68.47.108
+PMAX2500_MMCSB	10.68.47.109
+PMAX2500_eMGMTA	10.68.47.110
+PMAX2500_eMGMTB	10.68.47.111
+Unisphere	10.68.37.110
+Unity680F	10.68.47.107
+dlveeamVTL01	10.68.122.15
+dlveeamVTL01-MGMT	10.68.47.231
 
-已经通知业务人员，后续进行处理。
+-----------------
+10.68.47.101	dlsansw01
+10.68.47.102	dlsansw02
+10.160.33.182	F68_P_Fabric_42A
+10.160.33.183	F68_P_Fabric_42B
+10.68.47.103	PMAX2000_MMCSA
+10.68.47.104	PMAX2000_MMCSB
+10.68.47.105	PMAX2000_eMGMTA
+10.68.47.106	PMAX2000_eMGMTB
+10.68.47.108	PMAX2500_MMCSA
+10.68.47.109	PMAX2500_MMCSB
+10.68.47.110	PMAX2500_eMGMTA
+10.68.47.111	PMAX2500_eMGMTB
+10.68.37.110	Unisphere
+10.68.47.107	Unity680F
+10.68.122.15	dlveeamVTL01
+10.68.47.231	dlveeamVTL01-MGMT
+
+
+PowerMax_04222
+PowerMax_00369
+Unity_06218
+PowerMax_04222
+
+
 
 -----------------------------------------------------------------
 git config --global user.name "Chen Xuewen"
 git config --global user.email chenxuewen@aliyun.com
+
+git add -A ; git commit -m "chore: save all changes" ; git push
+
+---------------
+#windows restart
+shutdown /r /t 0
+---------------
+
+
+sudo nmap -sU -p 162 dlobm.hynix-dl.com
+nmap -sS -sU -T4 -A -v dlobm.hynix-dl.com
+
+
+nmap -sU -p 162 10.68.40.130
+nmap -sU -p 162 10.68.40.131
+nmap -sU -p 162 10.68.40.132
+
+ss -ulnp | grep 514
+ss -tlnp | grep 514
+--------------
+#查看syslog日志
+tail -n 100 /var/log/messages | grep syslog
+实时刷新log
+tail -n 100 -f /var/log/messages
+
+
+#测试 TCP
+nc -zv 10.0.0.5 22
+#测试 UDP
+nc -zvu <IP> <PORT>
+
+nc -l 8080
+

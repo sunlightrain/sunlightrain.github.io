@@ -1,0 +1,157 @@
+h1. KB：RHEL8/EL8 上 rsyslog 高 CPU（≈140%）与 /var/log/messages 重复刷屏 —— /dev/console 写入失败造成的日志风暴
+
+*KB ID:* KB-RSYSLOG-DEVCONSOLE-CPU-20260204  
+*适用范围:* RHEL 8 / CentOS 8 / Rocky Linux 8 / AlmaLinux 8  
+*组件:* rsyslogd（v8.x，示例：v8.2102.0-7.el8）  
+*严重性:* 高（CPU 异常、日志风暴、磁盘 IO/空间压力）
+
+----
+
+h2. 1. 概述（Summary）
+
+今早在 hymms dev server（hymmsdev01）发现 rsyslogd 进程 CPU 占用异常升高（约 140%），并且 /var/log/messages 出现大量重复相同日志。最终定位为：rsyslog 配置将 *.alert 输出到 /dev/console，而该环境（虚拟化平台）/dev/console 不可写，导致 rsyslog 输出失败后持续重试，形成“日志风暴”。[1](https://techdocs.broadcom.com/us/en/vmware-tanzu/standalone-components/tanzu-application-platform/1-12/tap/install-offline-profile.html)[2](https://knowledge.broadcom.com/external/article/313088/recovering-missing-tanzu-cli-plugins-whe.html)
+
+{info:title=影响}
+* rsyslogd CPU 高占用（>100%）导致系统性能下降  
+* /var/log/messages 快速增长，可能导致磁盘空间告警/耗尽  
+* 日志系统噪声升高，掩盖真实告警
+{info}
+
+----
+
+h2. 2. 现象（Symptoms）
+
+h3. 2.1 CPU 异常
+* rsyslogd 持续占用大量 CPU（约 140%）
+
+h3. 2.2 messages 日志刷屏
+/var/log/messages 大量重复类似如下错误（示例）：
+{code:language=text}
+rsyslogd[PID]: file '/dev/console'[7] write error - see https://www.rsyslog.com/solving-rsyslog-write-errors/ for help
+OS error: Input/output error [v8.2102.0-7.el8 try https://www.rsyslog.com/e/2027]
+{code}
+说明：e/2027 为 rsyslog 在输出/写入失败场景下常见的错误提示形式。[2](https://knowledge.broadcom.com/external/article/313088/recovering-missing-tanzu-cli-plugins-whe.html)
+
+----
+
+h2. 3. 根因分析（Root Cause Analysis）
+
+h3. 3.1 /dev/console 在该环境不可写
+在部分虚拟化/无有效控制台环境中，对 /dev/console 写入可能返回 *Input/output error (EIO)*。Red Hat KB 记录了向 /dev/console 写入出现 I/O error 的现象。[1](https://techdocs.broadcom.com/us/en/vmware-tanzu/standalone-components/tanzu-application-platform/1-12/tap/install-offline-profile.html)
+
+h3. 3.2 rsyslog 配置将高优先级日志输出到 /dev/console
+现场检查 rsyslog 配置发现存在：
+{code:language=text}
+*.alert                               /dev/console
+#kern.*                               /dev/console
+{code}
+
+h3. 3.3 输出失败触发持续重试，造成日志风暴与高 CPU
+当 rsyslog 输出目标不可写时，会持续报告 write error 并重试，产生大量重复 e/2027 类错误日志，进而造成 CPU 飙升；该行为在 rsyslog 社区也有类似案例描述。[2](https://knowledge.broadcom.com/external/article/313088/recovering-missing-tanzu-cli-plugins-whe.html)
+
+----
+
+h2. 4. 诊断与验证（Diagnosis / How to Confirm）
+
+h3. 4.1 验证 /dev/console 是否可写
+在目标主机执行：
+{code:language=bash}
+echo "test $(date)" > /dev/console
+echo $?
+{code}
+若出现 *Input/output error*，可确认控制台设备不可写（符合根因）。[1](https://techdocs.broadcom.com/us/en/vmware-tanzu/standalone-components/tanzu-application-platform/1-12/tap/install-offline-profile.html)
+
+h3. 4.2 定位 rsyslog 中引用 /dev/console 的规则
+{code:language=bash}
+grep -R "/dev/console" /etc/rsyslog.conf /etc/rsyslog.d/*
+{code}
+输出示例（现场）：
+{code:language=text}
+/etc/rsyslog.conf:#kern.*                                                 /dev/console
+/etc/rsyslog.conf:*.alert                               /dev/console
+{code}
+
+h3. 4.3 观察 rsyslogd 状态与刷屏
+{code:language=bash}
+top -p $(pidof rsyslogd)
+tail -f /var/log/messages
+{code}
+
+----
+
+h2. 5. 解决方案（Resolution）
+
+h3. 5.1 推荐修复：将 *.alert 输出改为文件（或禁用 console 输出）
+编辑 /etc/rsyslog.conf，将：
+{code:language=text}
+*.alert                               /dev/console
+{code}
+修改为（推荐保留告警日志落盘）：
+{code:language=text}
+*.alert                               /var/log/alert.log
+{code}
+或直接注释（如不需要）：
+{code:language=text}
+#*.alert                              /dev/console
+{code}
+
+h3. 5.2 重启 rsyslog 服务
+{code:language=bash}
+systemctl restart rsyslog
+{code}
+
+----
+
+h2. 6. 修复后验证（Post-Fix Verification）
+
+# 确认配置不再输出到 /dev/console：
+{code:language=bash}
+grep -R "/dev/console" /etc/rsyslog.conf /etc/rsyslog.d/
+{code}
+
+# 确认 CPU 恢复正常：
+{code:language=bash}
+top -p $(pidof rsyslogd)
+{code}
+
+# 确认 messages 不再刷屏：
+{code:language=bash}
+tail -n 50 /var/log/messages
+{code}
+
+# 确认 alert 日志写入新文件（如采用 /var/log/alert.log）：
+{code:language=bash}
+ls -l /var/log/alert.log
+tail -n 50 /var/log/alert.log
+{code}
+
+----
+
+h2. 7. 预防与最佳实践（Prevention / Best Practices）
+
+* 在虚拟化/无物理 console 的环境，避免将日志输出到 /dev/console（可能出现 EIO 导致写入失败）。[1](https://techdocs.broadcom.com/us/en/vmware-tanzu/standalone-components/tanzu-application-platform/1-12/tap/install-offline-profile.html)  
+* 建议将高优先级日志落盘到文件（便于审计、检索）并结合轮转策略。  
+* 若遇到写入失败/不落盘问题，可参考 rsyslog 官方排障建议（例如输出目标、权限、文件句柄限制等）。[3](https://www.munishpalmakhija.com/2024/12/11/vmware-tanzu-platform-10-installation-guide/)[4](https://github.com/vmware-tanzu/tanzu-cli/blob/main/docs/quickstart/install.md)  
+
+{tip:title=可选增强：日志风暴抑制（Rate Limit）}
+可在 rsyslog 配置中启用系统日志 rate limit（视发行版语法支持情况调整）以降低突发风暴风险。
+{tip}
+
+----
+
+h2. 8. 事件处理记录（Incident Notes）
+
+* 发现时间：2026-02-04 上午  
+* 影响主机：hymmsdev01  
+* 现象：rsyslogd CPU ≈ 140%，messages 大量重复 “/dev/console write error … e/2027”  
+* 定位：/etc/rsyslog.conf 存在 *.alert /dev/console；/dev/console 不可写  
+* 处理：将 alert 输出改为 /var/log/alert.log，重启 rsyslog  
+* 结果：CPU 恢复正常、messages 不再刷屏、告警日志落盘成功
+
+----
+
+h2. 9. 参考资料（References）
+
+* Red Hat：Writing to /dev/console causes Input/Output error（RHEL7/8/9）[1](https://techdocs.broadcom.com/us/en/vmware-tanzu/standalone-components/tanzu-application-platform/1-12/tap/install-offline-profile.html)  
+* rsyslog 社区：输出写失败反复报错（e/2027、Input/output error）的案例（Issue #4126）[2](https://knowledge.broadcom.com/external/article/313088/recovering-missing-tanzu-cli-plugins-whe.html)  
+* rsyslog 文档：输出文件未写入的常见原因与排障建议[3](https://www.munishpalmakhija.com/2024/12/11/vmware-tanzu-platform-10-installation-guide/)[4](https://github.com/vmware-tanzu/tanzu-cli/blob/main/docs/quickstart/install.md)

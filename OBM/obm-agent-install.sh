@@ -42,6 +42,7 @@ INFO:    Certificate request has been successfully triggered.
 |     CA_3252ea7a-cbb0-75ed-026a-ff061105569a_2048        |
 +---------------------------------------------------------+
 [root@dlhymmsweb02 ~]#
+
 #Linux_x64安装步骤
 #更改短主机名
 #1. Download
@@ -49,19 +50,22 @@ wget -d -r -np -nd http://10.68.37.105/iso/app/linux/obm/package/ -P /tmp/obm/1.
 cd /tmp/obm/1.0/
 unzip oa_media_Linux4.18_X64.zip
 #2. unzip当前软件压缩包
-#3. 运行安装脚本，确认hosts文件已添加解析，client和OBM都需要
+#3. 运行安装脚本，确认hosts文件已添加解析，client和OBM都需要 
+# 10.68.38.182 dlgrafana01
+# 10.68.40.130 dlobm.hynix-dl.com
 sh oainstall.sh -i -a -s dlobm.hynix-dl.com
 #4. 验证运行状态  /opt/OV/bin
+export PATH=$PATH:/opt/OV/bin
 ovc -status
 opcagt -status
 #5. 更改短主机名
-export PATH=$PATH:/opt/OV/bin
 ovcert -list
 ovconfchg -ns xpl.net -set LOCAL_NODE_NAME $HOSTNAME
 ovconfchg -ns eaagt -set OPC_NODE_NAME $HOSTNAME
 ovcert -certreq
 #6. 重启服务
 opcagt -cleanstart
+
 
 -----
 #windows安装步骤
@@ -81,6 +85,17 @@ opcagt -status
 7、重启服务
 opcagt -cleanstart
 -----
+ovcodautil -ping -n dlobm.skhynix-dl.com
+
+ovcodautil -ping -n dl68csdc61
+ovcodautil -ping -n dl68csdc62
+
+ovpolicy -l -host dlisnsqldbdev02 -ovrg server
+ovpolicy -l -host dlbfroot01 -ovrg server
+
+-----
+
+
 export PATH=$PATH:/opt/OV/bin
 ovconfchg -ns eaagt -set OPC_NODE_NAME dlhymmswas01
 opcagt -cleanstart
@@ -97,3 +112,23 @@ export PATH=$PATH:/opt/OV/bin
 ovconfchg -ns eaagt -set OPC_NODE_NAME dlhymmsdb02
 opcagt -cleanstart
 -----
+
+ovconfchg -ns xpl.net -set LOCAL_NODE_NAME dlopsai01
+ovconfchg -ns eaagt -set OPC_NODE_NAME dlopsai01
+
+---
+883 10.68.47.103    PMAX2000_MMCSA
+884 10.68.47.104    PMAX2000_MMCSB
+885 10.68.47.105    PMAX2000_eMGMTA
+886 10.68.47.106    PMAX2000_eMGMTB
+
+887 10.68.47.108    PMAX2500_MMCSA
+888 10.68.47.109    PMAX2500_MMCSB
+889 10.68.47.110    PMAX2500_eMGMTA
+890 10.68.47.111    PMAX2500_eMGMTB
+
+891 10.68.37.110    Unisphere
+---
+10.68.47.103-106	PowerMax_04222
+10.68.47.108-111	PowerMax_00369
+10.68.47.107		Unity_680F
