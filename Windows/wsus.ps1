@@ -112,3 +112,14 @@ wuauclt /resetauthorization /detectnow
 
 PowerShell.exe (New-Object -ComObject Microsoft.Update.AutoUpdate).DetectNow()
  -------------------------------------
+
+2025-12KB5071543（累计更新，安全更新）
+2025-11KB5068864（累计更新）、KB5070247（SSU）
+2025-10KB5070882、KB5066836、KB5066584（SSU）
+2025-09KB5065427、KB5065687（SSU）
+2025-08KB5063871
+2025-07KB5062560、KB5062799（SSU）
+2025-06KB5061010
+2025-05KB5058383
+2025-04KB5055521、KB5055170（.NET）
+

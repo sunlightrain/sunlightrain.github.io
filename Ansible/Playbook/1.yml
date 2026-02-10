@@ -1,0 +1,45 @@
+
+ansible all -m ping
+ansible -i /etc/ansible/hosts webservers -m shell -a 'pwd'
+ansible -i /etc/ansible/hosts webservers -m shell -a 'pwd chdir=/root/ccg'
+
+ansible -i /etc/ansible/hosts local -m shell -a 'pwd creates=~/.ssh/id_rsa'
+
+1) 简单实验 A：批量创建用户
+Playbook：01_users.yml
+- name: Create local users in bulk
+  hosts: all
+  become: yes
+  vars:
+    users_to_create:
+      - name: devops
+        uid: 1201
+        shell: /bin/bash
+        groups: wheel
+      - name: app
+        uid: 1202
+        shell: /bin/bash
+        groups: ""
+  tasks:
+    - name: Ensure groups exist (optional)
+      group:
+        name: wheel
+      when: "'wheel' in (item.groups | default(''))"
+      loop: "{{ users_to_create }}"
+
+    - name: Create users
+      user:
+        name: "{{ item.name }}"
+        uid: "{{ item.uid | default(omit) }}"
+        shell: "{{ item.shell | default('/bin/bash') }}"
+        groups: "{{ item.groups | default(omit) }}"
+        state: present
+        create_home: yes
+      loop: "{{ users_to_create }}"
+
+    - name: Deploy default SSH key for devops (示例)
+      authorized_key:
+        user: devops
+        state: present
+        key: "{{ lookup('file', 'files/devops_id_rsa.pub') }}"
+      when: users_to_create | selectattr('name','equalto','devops') | list | length > 0
