@@ -105,3 +105,41 @@ nc -zvu <IP> <PORT>
 
 nc -l 8080
 
+---
+subscription-manager register --username sunlightrain --password redhat@ba0104
+
+subscription-manager refresh
+
+subscription-manager identity
+
+# Un-registering a system
+# subscription-manager remove --all
+# subscription-manager unregister
+# subscription-manager clean
+
+
+dnf -y install epel-release
+dnf search ansible
+dnf install -y ansible.noarch
+
+ansible --version
+
+---
+vaultwarden/server:latest
+
+docker tag vaultwarden/server:latest 10.68.37.208/library/vaultwarden/server:latest
+docker push 10.68.37.208/library/vaultwarden/server:latest
+
+mkdir -p /etc/docker
+vim  /etc/docker/daemon.json
+{
+  "insecure-registries": ["10.68.37.208"]
+}
+
+docker login 10.68.37.108
+docker pull 10.68.37.208/library/vaultwarden/server:latest
+
+
+ovconfchg -ns xpl.net -set LOCAL_NODE_NAME dlwsus01
+ovconfchg -ns eaagt -set OPC_NODE_NAME dlwsus01
+---

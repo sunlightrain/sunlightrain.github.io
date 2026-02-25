@@ -90,3 +90,15 @@ tanzu plugin download-bundle --group vmware-tkg/default:v2.3.0 --to-tar plugin_b
 [i] copy | done: file 'sha256-f4d7fd18fa5b91de924f005120a776498e49078064d2c358e16fe1d296aae4c4.tar.gz' (21.15386462s)
 [i] saving plugin bundle at: plugin_bundle_tkg_latest.tar.gz
 [root@bootstrap ~]#
+
+
+
+---
+tanzu isolated-cluster upload-bundle --source-directory /data/tkgm/ --destination-repo 10.68.37.208/tkgm-images
+
+tanzu isolated-cluster upload-bundle --source-directory /root/Downloads/tkgm-images/ --destination-repo 10.68.37.208/tkgm-images
+
+tanzu plugin upload-bundle --tar ./plugin_bundle_tkg_latest.tar.gz --to-repo 10.68.37.208/tkgm-images/
+
+tanzu plugin source update default --uri 10.68.37.208/tkgm-images/plugin-inventory:latest
+---
