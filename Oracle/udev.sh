@@ -58,3 +58,113 @@ udevadm trigger--type=devices
  18 KERNEL=="sd*", SUBSYSTEM=="block", PROGRAM=="/usr/lib/udev/scsi_id -g -u -d /dev/$parent", RESULT=="36000c29be7b74fec4e3f5417382adf64", SYMLINK+="dlffdcoradb_asm/dlffdcoradb_asmd07", OWNER="oragrid", GROUP="dba", MODE="0660"
  19 KERNEL=="sd*", SUBSYSTEM=="block", PROGRAM=="/usr/lib/udev/scsi_id -g -u -d /dev/$parent", RESULT=="36000c29b02b616275a6ca5443019793f", SYMLINK+="dlffdcoradb_asm/dlffdcoradb_asmd08", OWNER="oragrid", GROUP="dba", MODE="0660"
 --- END ---
+
+
+---
+# test asm 扩容
+KERNEL=="sd*", SUBSYSTEM=="block", PROGRAM=="/usr/lib/udev/scsi_id -g -u -d /dev/$parent", RESULT=="36000c29bb5c237d457406847ca62704a", SYMLINK+="dlmax_asm/dlmax_asms01", OWNER="oragrid", GROUP="dba", MODE="0660"
+KERNEL=="sd*", SUBSYSTEM=="block", PROGRAM=="/usr/lib/udev/scsi_id -g -u -d /dev/$parent", RESULT=="36000c29efa0801d11d0457d243617791", SYMLINK+="dlmax_asm/dlmax_asms02", OWNER="oragrid", GROUP="dba", MODE="0660"
+KERNEL=="sd*", SUBSYSTEM=="block", PROGRAM=="/usr/lib/udev/scsi_id -g -u -d /dev/$parent", RESULT=="36000c29b47ed72ec16aab501079b4127", SYMLINK+="dlmax_asm/dlmax_asms03", OWNER="oragrid", GROUP="dba", MODE="0660"
+
+KERNEL=="sd*", SUBSYSTEM=="block", PROGRAM=="/usr/lib/udev/scsi_id -g -u -d /dev/$parent", RESULT=="36000c2980dbf25f81c92612419634778", SYMLINK+="dlmax_asm/dlmax_asmr01", OWNER="oragrid", GROUP="dba", MODE="0660"
+KERNEL=="sd*", SUBSYSTEM=="block", PROGRAM=="/usr/lib/udev/scsi_id -g -u -d /dev/$parent", RESULT=="36000c29fe2d54b2e6a5b3f07afd19a56", SYMLINK+="dlmax_asm/dlmax_asmr02", OWNER="oragrid", GROUP="dba", MODE="0660"
+KERNEL=="sd*", SUBSYSTEM=="block", PROGRAM=="/usr/lib/udev/scsi_id -g -u -d /dev/$parent", RESULT=="36000c292a365aaa33ee5dcdd2c7a4a1b", SYMLINK+="dlmax_asm/dlmax_asmr03", OWNER="oragrid", GROUP="dba", MODE="0660"
+
+KERNEL=="sd*", SUBSYSTEM=="block", PROGRAM=="/usr/lib/udev/scsi_id -g -u -d /dev/$parent", RESULT=="36000c293121ce8bb64c6b77b99db695b", SYMLINK+="dlmax_asm/dlmax_asmd01", OWNER="oragrid", GROUP="dba", MODE="0660"
+KERNEL=="sd*", SUBSYSTEM=="block", PROGRAM=="/usr/lib/udev/scsi_id -g -u -d /dev/$parent", RESULT=="36000c29d7028afa4a09b29ac11bf1157", SYMLINK+="dlmax_asm/dlmax_asmd02", OWNER="oragrid", GROUP="dba", MODE="0660"
+KERNEL=="sd*", SUBSYSTEM=="block", PROGRAM=="/usr/lib/udev/scsi_id -g -u -d /dev/$parent", RESULT=="36000c29d9a27bc7f385100d97f3bde58", SYMLINK+="dlmax_asm/dlmax_asmd03", OWNER="oragrid", GROUP="dba", MODE="0660"
+---
+# New configuration for dlmax_asm
+KERNEL=="sd*", SUBSYSTEM=="block", PROGRAM=="/usr/lib/udev/scsi_id -g -u -d /dev/$parent", RESULT=="36000c299a00c3b8fd5bc40840889a7ea", SYMLINK+="dlmax_asm/dlmax_asmd04", OWNER="oragrid", GROUP="dba", MODE="0660"
+KERNEL=="sd*", SUBSYSTEM=="block", PROGRAM=="/usr/lib/udev/scsi_id -g -u -d /dev/$parent", RESULT=="36000c2995e3725904ad2d0468199c652", SYMLINK+="dlmax_asm/dlmax_asmd05", OWNER="oragrid", GROUP="dba", MODE="0660"
+
+36000c2995e3725904ad2d0468199c652
+
+parted /dev/sdl mklabel gpt
+parted /dev/sdl mkpart primary "1 -1"
+
+ll /dev/dlmax_asm/*
+
+vim /etc/udev/rules.d/90-oracleasm.rules
+
+
+
+udevadm control --reload-rules
+udevadm trigger
+
+echo 1 > /sys/class/block/sdm/device/rescan
+
+
+asmca -silent \
+-addDisk \
+-diskGroupName DATA \
+-diskList '/dev/dlmax_asm/dlmax_asmd04'
+
+
+[oragrid@dltestoradb01:/oragrid] asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  N         512             512   4096  4194304    196596    46752                0           46752              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     98292    77444                0           77444              0             N  REDO/
+MOUNTED  NORMAL  N         512             512   4096  4194304     30708    29664            10236            9714              0             Y  SYSTEM/
+[oragrid@dltestoradb01:/oragrid]
+[oragrid@dltestoradb01:/oragrid]
+[oragrid@dltestoradb01:/oragrid] asmcmd lsdsk
+Path
+/dev/dlmax_asm/dlmax_asmd01
+/dev/dlmax_asm/dlmax_asmd02
+/dev/dlmax_asm/dlmax_asmd03
+/dev/dlmax_asm/dlmax_asmr01
+/dev/dlmax_asm/dlmax_asmr02
+/dev/dlmax_asm/dlmax_asmr03
+/dev/dlmax_asm/dlmax_asms01
+/dev/dlmax_asm/dlmax_asms02
+/dev/dlmax_asm/dlmax_asms03
+[oragrid@dltestoradb01:/oragrid] asmca -silent \
+> -addDisk \
+> -diskGroupName DATA \
+> -diskList '/dev/dlmax_asm/dlmax_asmd04'
+
+
+
+[oragrid@dltestoradb01:/oragrid] asmcmd lsdsk
+Path
+/dev/dlmax_asm/dlmax_asmd01
+/dev/dlmax_asm/dlmax_asmd02
+/dev/dlmax_asm/dlmax_asmd03
+/dev/dlmax_asm/dlmax_asmd04
+/dev/dlmax_asm/dlmax_asmr01
+/dev/dlmax_asm/dlmax_asmr02
+/dev/dlmax_asm/dlmax_asmr03
+/dev/dlmax_asm/dlmax_asms01
+/dev/dlmax_asm/dlmax_asms02
+/dev/dlmax_asm/dlmax_asms03
+[oragrid@dltestoradb01:/oragrid] asmcmd lsdg
+State    Type    Rebal  Sector  Logical_Sector  Block       AU  Total_MB  Free_MB  Req_mir_free_MB  Usable_file_MB  Offline_disks  Voting_files  Name
+MOUNTED  EXTERN  N         512             512   4096  4194304    262128   112272                0          112272              0             N  DATA/
+MOUNTED  EXTERN  N         512             512   4096  4194304     98292    77444                0           77444              0             N  REDO/
+MOUNTED  NORMAL  N         512             512   4096  4194304     30708    29664            10236            9714              0             Y  SYSTEM/
+[oragrid@dltestoradb01:/oragrid]
+
+[oragrid@dltestoradb01:/oragrid] asmcmd lsop
+Group_Name  Pass       State  Power  EST_WORK  EST_RATE  EST_TIME
+[oragrid@dltestoradb01:/oragrid]
+[oragrid@dltestoradb01:/oragrid]
+[oragrid@dltestoradb01:/oragrid] asmcmd lsdsk -G DATA
+Path
+/dev/dlmax_asm/dlmax_asmd01
+/dev/dlmax_asm/dlmax_asmd02
+/dev/dlmax_asm/dlmax_asmd03
+/dev/dlmax_asm/dlmax_asmd04
+
+
+
+✔ 1. 查看现有磁盘组
+asmcmd lsdg
+✔ 2. 添加磁盘到 DATA
+asmca -silent -addDisk -diskGroupName DATA -diskList '/dev/dlmax_asm/dlmax_asmd05'
+✔ 3. 查看磁盘已被识别
+asmcmd lsdsk -G DATA
+✔ 4. 手工触发 rebalance（可选）
+sqlplus / as sysasmalter diskgroup DATA rebalance power 8;
+✔ 5. 查看 rebalance 进度
+asmcmd lsop

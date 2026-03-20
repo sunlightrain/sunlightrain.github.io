@@ -143,3 +143,342 @@ docker pull 10.68.37.208/library/vaultwarden/server:latest
 ovconfchg -ns xpl.net -set LOCAL_NODE_NAME dlwsus01
 ovconfchg -ns eaagt -set OPC_NODE_NAME dlwsus01
 ---
+
+# 添加用户到本地管理员组
+lusrmgr.msc
+Add-LocalGroupMember -Group "Administrators" -Member "域名\用户名"
+# 
+
+
+Windows 更新 현황
+总部
+Windows 2016 ： KB5070247，KB5068864（2025-11）
+Windows 2022 ： KB5068787（2025-11）
+WX
+Windows 2016 ： KB5066136（2025-10）
+Windows 2022 ： KB5066139/KB5075905/KB5075906（2025-10）
+
+
+----
+
+DL68CSDC61
+DL68CSDC62
+dlhysacapp01	no passwd
+dlhysacapp02	no passwd
+dlhysacdb01	no passwd
+dlhysacdb02	no passwd
+dlhydap01	no passwd
+dlhydap02	no passwd
+dlobmcon01	ok
+dllogwin11  ok
+ 
+
+OBM里有node，system list里没有对象
+
+dlscommgmt01  
+dlscommgmt02
+dlveemm01
+dlveemmmfg01
+dlwsus01	ok	需更新system list
+
+
+system list里需要改成Y 
+
+dlprntdb03	ok
+f68cadutil61	ok
+f68cadutil62	ok
+
+
+----
+
+$VC='dlisnvcsa01.corp.hynix-dl.com'
+$UName='administrator@vsphere.local'
+$UPass='DL@infra12!@'
+
+Connect-VIServer -Server $VC -User $UName -Password $UPass
+
+$ntpServers = @("10.68.121.7","10.68.121.8")
+
+Foreach($Host in Get-VMHost){
+    Write-Host "Configuring NTP on $Host..."
+    # 清理旧的 NTP 配置
+    Get-VMHostNtpServer -VMHost $Host | Remove-VMHostNtpServer -Confirm:$false
+
+    # 添加新的 NTP 服务器
+    foreach ($ntp in $ntpServers){
+        Add-VMHostNtpServer -NtpServer $ntp -VMHost $Host
+    }
+
+    # 启动并设置 ntpd 服务
+    $ntpd = Get-VMHostService -VMHost $Host | Where-Object {$_.Key -eq "ntpd"}
+    Start-VMHostService -HostService $ntpd
+    Set-VMHostService -HostService $ntpd -Policy "on" -Confirm:$false
+
+    # 验证 NTP 配置
+    $esxcli = Get-EsxCli -VMHost $Host -V2
+    $time = $esxcli.system.time.get.Invoke()
+    $ntpStatus = $esxcli.system.ntp.get.Invoke()
+    Write-Host "Host: $Host | Time: $($time.Date) $($time.Hour):$($time.Minute):$($time.Second) | NTP Enabled: $($ntpStatus.Enabled)"
+}
+
+
+Foreach($Host in Get-VMHost){
+    # 验证 NTP 配置
+    $esxcli = Get-EsxCli -VMHost $Host -V2
+    $time = $esxcli.system.time.get.Invoke()
+    $ntpStatus = $esxcli.system.ntp.get.Invoke()
+    Write-Host "Host: $Host | Time: $($time.Date) $($time.Hour):$($time.Minute):$($time.Second) | NTP Enabled: $($ntpStatus.Enabled)"
+}
+
+---
+
+
+# 获取所有 ESXi 主机
+$esxiHosts = Get-VMHost
+
+# 批量配置 NTP
+foreach ($host in $esxiHosts) {
+    Get-VMHostService -VMHost $host | Where-Object {$_.Key -eq "ntpd"} | Start-VMHostService
+    Get-VMHostNtpServer -VMHost $host | Remove-VMHostNtpServer -Confirm:$false
+    Add-VMHostNtpServer -VMHost $host -NtpServer $ntpServers
+    Get-VMHostService -VMHost $host | Where-Object {$_.Key -eq "ntpd"} | Restart-VMHostService
+}
+
+
+
+# 获取所有 ESXi 主机
+$esxiHosts = Get-VMHost
+
+# 批量配置 NTP
+foreach ($host in $esxiHosts) {
+    (Get-VMHostService -VMHost $host | Where-Object {$_.Key -eq "ntpd"}).Running
+}
+---
+nmap -sU -p 123 10.68.121.8
+nmap -sU -p 123 10.68.121.7
+
+
+
+
+ 
+
+ 
+
+
+
+---
+
+SYNTAX_VERSION 2
+LOGFILE "MyApp DATA threshold with server"
+DESCRIPTION "监控 Windows 日志，当 Cnt > 200000 告警，并包含 server"
+# LOGPATH 可留空，因为预处理脚本会输出日志
+CHSET UTF8
+FROM_LAST_POS
+POLLING_INTERVAL 60s
+
+PREPROC
+    FILE "powershell.exe"
+    ARGS "-ExecutionPolicy Bypass -File \"D:\\monitor\\flatten-log.ps1\""
+END
+
+MSGCONDITIONS
+    DESCRIPTION "DATA 超阈值"
+    CONDITION
+        TEXT "^(<*project>)\\s\\|\\s(<*cnt>)\\s\\|\\sserver=(<*server>)$"
+        SET project "<project>"
+        SET cnt "<cnt>"
+        SET server "<server>"
+        COMPARE cnt GT 200000
+        SEVERITY Critical
+        SET TEXT "Project <project> 超阈值：<cnt>（阈值 200000）@<server>"
+END
+
+
+
+------------
+#Add RDM LUN 
+00101-60000970000420000369533030313031
+00102-60000970000420000369533030313032
+00103-60000970000420000369533030313033
+00104-60000970000420000369533030313034
+00105-60000970000420000369533030313035
+00106-60000970000420000369533030313036
+00107-60000970000420000369533030313037
+00108-60000970000420000369533030313038
+-----------
+wget -d -r -np -nd http://10.68.37.105/iso/app/windows/MSSQL/2019/ -P c:\temp\MSSQL\2019\
+
+---
+sudo ./install_obm.sh --server dlobm.hynix-dl.com \
+--repo http://10.68.37.105/iso/app/linux/obm/package/ \
+--target /tmp/obm/1.0 \
+--set-hosts "10.68.40.130 dlobm.hynix-dl.com" \
+--hostname dlnexus01
+
+
+
+
+esxcli network nic down -n vmnic4
+esxcli network nic up -n vmnic4
+
+10.68.37.110 000297904222
+
+
+
+account:    testlab\testdbaadmin
+pw: 123qwe!
+ 
+监控服务名称:
+1.
+service name : MSSQL$SQLDEV_CLUSTER
+Display name : SQL Server (SQLDEV_CLUSTER)
+ 
+2. 
+service name : SQLAgent$SQLDEV_CLUSTER
+Display name : SQL Server Agent (SQLDEV_CLUSTER)
+ 
+3. 
+service name : Sysmon4MSSqlService
+Display name : EXEM Sysmon For MSSQL Service
+ 
+
+
+
+---
+Invoke-Command -ComputerName dlwintest01 -ScriptBlock { Get-MpComputerStatus | Select-Object AntivirusSignatureLastUpdated, AntispywareSignatureLastUpdated, NISSignatureLastUpdated, QuickScanStartTime, QuickScanEndTime, AntivirusSignatureVersion }
+
+
+
+---
+
+
+将 ISO 映像挂载到设备的 CD/DVD 驱动器
+
+要转储已附加 ISO 映像中包含的修补程序，请运行以下命令：
+
+安装 vCenter Server 修补程序
+升级VCSA Patch 8.0U3c → 8.0U3g SOP
+
+
+Configure Bastion Host
+Install Harbor Image Registry
+Deploy and Configure Bootstrap VM 
+
+
+parted /dev/sdm mklabel gpt
+parted /dev/sdm mkpart primary "1 -1"
+
+
+cd existing_repo
+git remote add origin https://git.hynix-dl.com/X7020856/chenxuewen.git
+git branch -M main
+git push -uf origin main
+
+
+git status
+git branch --show-current
+git log --oneline -n 1
+
+# 1) 做第一次提交
+git commit -m "Initial commit"
+
+# 2) 将 main 推送到远端，并建立跟踪关系（推荐，不要用 -f）
+git push -u origin main
+
+---
+[root@bootstrap Templates]# git branch --show-current
+main
+[root@bootstrap Templates]# git log --oneline -n 1
+fatal: your current branch 'main' does not have any commits yet
+[root@bootstrap Templates]# git commit -m "Initial commit"
+Author identity unknown
+
+*** Please tell me who you are.
+
+Run
+
+  git config --global user.email "you@example.com"
+  git config --global user.name "Your Name"
+
+to set your account's default identity.
+Omit --global to set the identity only in this repository.
+
+fatal: unable to auto-detect email address (got 'root@bootstrap.(none)')
+[root@bootstrap Templates]# git remote -v
+origin  https://git.hynix-dl.com/X7020856/chenxuewen.git (fetch)
+origin  https://git.hynix-dl.com/X7020856/chenxuewen.git (push)
+[root@bootstrap Templates]# git status
+On branch main
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+        new file:   Ansible-test/playbooks/rsyslog-fix-console.yml
+        new file:   Ansible-test/templates/logrotate-alert.j2
+        new file:   How to Run Remote Commands with Ansible Shell Module/Example 1: Running a Simple Command/Run a simple command.yml
+        new file:   How to Run Remote Commands with Ansible Shell Module/Example 2: Show Memory Usage/Show Memory Usage.yml
+        new file:   How to Run Remote Commands with Ansible Shell Module/Example 3: Run Multiple Commands/Run Multiple Commands.yml
+        new file:   How to Run Remote Commands with Ansible Shell Module/Example 4: Check If Apache Service is Running/Check If Apache Service is Running.yml
+        new file:   How to Run Remote Commands with Ansible Shell Module/Example 5: Using creates to Check File Existence/Using creates to Check File Existence.yml
+        new file:   How to Run Remote Commands with Ansible Shell Module/Example 6: Combining Shell Commands with Output Processing/Example 6: Combining Shell Commands with Output Processing.yml
+        new file:   How to Run Remote Commands with Ansible Shell Module/redme.md
+        new file:   ansible-labs/01_users.yml
+        new file:   ansible-labs/02_packages.yml
+        new file:   ansible-labs/03_sysctl_and_service.yml
+        new file:   ansible-labs/04_nginx.yml
+        new file:   ansible-labs/05_docker.yml
+        new file:   ansible-labs/labgaude
+        new file:   ansible-labs/templates/nginx.conf
+        new file:   redme.md
+
+[root@bootstrap Templates]#
+
+git config user.name "Chen, XuewenX"
+git config user.email "X7020856@hynix-dl.com"
+
+
+chmod 600 /etc/xinetd.conf
+
+chmod 600 /etc/xinetd.d/
+
+
+drw-------.  2 root root         6 Jun 21  2021 xinetd.d
+drwxr-xr-x.  3 root root        36 Sep  8  2022 xml
+drwxr-xr-x.  2 root root        57 Dec  9  2024 yum
+lrwxrwxrwx   1 root root        12 Mar 18  2022 yum.conf -> dnf/dnf.conf
+drwxr-xr-x.  2 root root        71 Dec 19  2024 yum.repos.d
+drwxr-xr-x.  3 root root        29 Sep  8  2022 zabbix
+-rw-r--r--.  1 root root       252 Feb 23  2022 zlogin
+-rw-r--r--.  1 root root        86 Feb 23  2022 zlogout
+-rw-r--r--.  1 root root       375 Feb 23  2022 zprofile
+-rw-r--r--.  1 root root       510 Feb 23  2022 zshenv
+-rw-r--r--.  1 root root      1135 Feb 23  2022 zshrc
+[root@dlisnmisvrepo01 xinetd.d]# history
+
+
+
+现代运维体系架构图（可视化）
+ITSM/CMDB 在你公司环境的落地方案
+运维体系最佳实践流程图（用 Python 画）
+
+chmod -R 777 /etc/nginx/conf.d
+#权限失控，安全事故高危
+chown -R wmsadmin /etc/nginx/conf.d
+#系统目录所有者不再是 root，严重破坏系统安全
+
+
+mv kubectl-linux-v1.26.5+vmware.2 /usr/local/bin/kubectl && chmod +x /usr/local/bin/kubectl
+
+chmod ugo+x kapp-linux-amd64-v0.55.0+vmware.2 && mv ./kapp-linux-amd64-v0.55.0+vmware.2 /usr/local/bin/kapp
+chmod ugo+x kbld-linux-amd64-v0.37.0+vmware.2 && mv ./kbld-linux-amd64-v0.37.0+vmware.2 /usr/local/bin/kbld
+
+
+gunzip imgpkg-linux-amd64-v0.36.0+vmware.2.gz
+
+chmod ugo+x imgpkg-linux-amd64-v0.36.0+vmware.2 && mv ./imgpkg-linux-amd64-v0.36.0+vmware.2 /usr/local/bin/imgpkg
+
+tar -zxvf yq_linux_amd64.tar.gz
+mv yq_linux_amd64 /usr/local/bin/yq
+
+

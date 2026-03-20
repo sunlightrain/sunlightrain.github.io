@@ -1,0 +1,68 @@
+services:
+  vaultwarden:
+    image: 10.68.37.208/library/vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    environment:
+      DOMAIN: "https://10.68.37.210"
+    volumes:
+      -vw-data/:/data/
+    ports:
+      - 80:80
+
+---
+version: "3"
+
+services:
+  vaultwarden:
+    image: 10.68.37.208/library/vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    environment:
+      - WEBSOCKET_ENABLED=true
+    volumes:
+      - ./vw-data:/data
+
+
+  caddy:
+    image: 10.68.37.208/library/vaultwarden/caddy:latest
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./certs:/certs
+
+---
+version: "3"
+
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    environment:
+      - WEBSOCKET_ENABLED=true
+    volumes:
+      - ./vw-data:/data
+    networks:
+      - web
+
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./certs:/certs
+    networks:
+      - web
+
+networks:
+  web:
+    driver: bridge

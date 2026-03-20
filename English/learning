@@ -1,0 +1,79 @@
+Incident Summary (Example)
+
+Issue:
+Users reported that the application on VM APP-SRV-01 was very slow.
+Root Cause:
+The /tmp directory inside the VM was full, which caused the application to fail when writing temporary data during the batch job.
+Actions Taken:
+We checked the VM resources, datastore IOPS, and filesystem usage. Then we cleaned up unnecessary temporary files in /tmp and freed up disk space.
+Current Status:
+The VM is running normally, and the application team has confirmed that the system performance is back to normal.
+
+🧩 我给你拆解一下这些句子（方便你学习）
+1️⃣ 描述问题（Issue）
+
+“Users reported that the application on VM APP-SRV-01 was very slow.”
+
+
+Users reported… 用户反馈……
+the application was very slow 应用很慢
+
+你也可以换成：
+
+“We received a report that the VM APP-SRV-01 was running slowly.”
+
+
+2️⃣ 根因（Root Cause）
+
+“The /tmp directory inside the VM was full, which caused the application to fail when writing temporary data during the batch job.”
+
+关键结构：
+
+X was full, which caused Y → “X 满了，导致 Y 问题”
+“temporary data” → 临时数据
+“batch job” → 批处理任务
+
+你以后可以替换成：
+
+/var/log was full
+the datastore had high latency
+the network link was unstable
+
+
+3️⃣ 处理动作（Actions Taken）
+
+“We checked the VM resources, datastore IOPS, and filesystem usage. Then we cleaned up unnecessary temporary files in /tmp and freed up disk space.”
+
+常用结构：
+
+We checked ... → 我们检查了……
+Then we ... → 随后我们……
+cleaned up unnecessary files → 清理无用文件
+freed up disk space → 释放了磁盘空间
+
+
+4️⃣ 当前状态（Current Status）
+
+“The VM is running normally, and the application team has confirmed that the system performance is back to normal.”
+
+非常标准的收尾句：
+
+is running normally → 运行正常
+has confirmed → 已确认
+is back to normal → 已恢复正常
+
+
+---
+Issue:
+[Who] reported that [system/application] on [server/VM name] was [issue description].
+
+Root Cause:
+The issue was caused by [root cause], which led to [impact].
+
+Actions Taken:
+We checked [what you checked: resources / logs / network / storage].
+Then we [what you did: cleaned / restarted / reconfigured / increased resource] and [result].
+
+Current Status:
+The [VM/system/application] is running normally now, and [team/user] has confirmed that the [performance/service] is back to normal.
+---

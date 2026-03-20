@@ -1,0 +1,9 @@
+
+1、Download
+.\wget.exe -d -r -np -nd http://10.68.37.105/iso/app/windows/ontune/1.0/ -P c:\temp\ontune\1.0\
+2、将软件目录解压至C:\Program Files并将软件目录命名为onTuneAgent
+3、进入软件目录，以管理员权限运行 AgentConfig.exe
+4、勾选配置界面的Windows Service和Service Retry。因为我们Server的Host name是准确的，所以在这里无需勾选主机名进行更改。依次点选Primary，输入IP地址10.68.38.145和端口18893，点选Secondary，输入IP地址10.68.38.146。
+5、以管理员权限打开cmd , 执行命令 netstat -an | findstr 18893
+返回结果为Established，即为安装正常 。
+返回结果为SYN_SENT，则需要打开防火墙对应端口。
