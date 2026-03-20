@@ -76,8 +76,7 @@ git config --global user.email chenxuewen@aliyun.com
 git add -A ; git commit -m "chore: save all changes" ; git push
 
 ---------------
-#windows restart
-shutdown /r /t 0
+
 ---------------
 
 
@@ -176,9 +175,9 @@ dllogwin11  ok
 OBM里有node，system list里没有对象
 
 dlscommgmt01  
-dlscommgmt02
-dlveemm01
-dlveemmmfg01
+dlscommgmt02 
+dlveemm01  已关机
+dlveemmmfg01  已关机
 dlwsus01	ok	需更新system list
 
 
