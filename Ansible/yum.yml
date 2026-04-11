@@ -1,0 +1,29 @@
+- name: 批量配置 yum 源
+  hosts: all
+  become: yes
+  tasks:
+
+    - name: 备份原有 yum 源目录（只执行一次）
+      command: mv /etc/yum.repos.d /etc/yum.repos.d.bak
+      args:
+        creates: /etc/yum.repos.d.bak
+
+    - name: 创建新的 yum 源目录
+      file:
+        path: /etc/yum.repos.d
+        state: directory
+        mode: '0755'
+
+    - name: 分发本地 yum repo 文件
+      copy:
+        src: yum/local-repos.repo
+        dest: /etc/yum.repos.d/local-repos.repo
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: 清理 yum 缓存
+      command: yum clean all
+
+    - name: 生成 yum 缓存
+      command: yum makecache

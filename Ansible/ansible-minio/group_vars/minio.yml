@@ -1,0 +1,26 @@
+# 这是后续扩容、改盘唯一需要动的配置文件
+# MinIO 用户
+minio_user: minio
+minio_group: minio
+
+# MinIO 端口
+minio_api_port: 9000
+minio_console_port: 9001
+
+# 管理账号（生产请用 Vault）
+minio_root_user: minioadmin
+minio_root_password: minioadmin123
+
+# MinIO 节点（必须与 inventory 一致）
+minio_hosts:
+  - minio-01
+  - minio-02
+  - minio-03
+  - minio-04
+
+# 数据盘规划（与 Terraform 的 unit_number 一一对应）
+minio_disks:
+  - { device: /dev/sdb, mount: /data1 }
+  - { device: /dev/sdc, mount: /data2 }
+  - { device: /dev/sdd, mount: /data3 }
+  - { device: /dev/sde, mount: /data4 }

@@ -1,0 +1,31 @@
+- name: Deploy Root and Issuing CA on RHEL-based systems
+  hosts: testservers
+  become: yes
+  tasks:
+    - name: Copy Root CA to trust anchors
+      copy:
+        src: SKhynix_DMTM_Root_CA_G1_certificate.cer
+        dest: /etc/pki/ca-trust/source/anchors/SKhynix_DMTM_Root_CA_G1_certificate.cer
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Copy Issuing CA to trust anchors
+      copy:
+        src: SKhynix_DMTM_lssuing_CA_G1_certificate.cer
+        dest: /etc/pki/ca-trust/source/anchors/SKhynix_DMTM_lssuing_CA_G1_certificate.cer
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Update CA trust
+      command: update-ca-trust
+
+    # 验证：确认 Root CA 已被系统识别
+    
+    - name: Verify Root CA is trusted
+      shell: |
+        trust list | grep -i "SKhynix"
+      register: trust_check
+      changed_when: false
+      failed_when: trust_check.rc != 0

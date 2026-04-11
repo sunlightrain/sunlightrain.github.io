@@ -1,0 +1,74 @@
+---
+## 1. 基础环境准备
+
+- name: 创建 minio 组
+  group:
+    name: "{{ minio_group }}"
+
+- name: 创建 minio 用户
+  user:
+    name: "{{ minio_user }}"
+    group: "{{ minio_group }}"
+    shell: /sbin/nologin
+    system: yes
+
+## 2. 拷贝并安装 MinIO RPM
+
+- name: 拷贝 MinIO RPM 到节点
+  copy:
+    src: minio.rpm
+    dest: /tmp/minio.rpm
+    mode: 0644
+
+- name: 安装 MinIO RPM
+  yum:
+    name: /tmp/minio.rpm
+    state: present
+
+## 3. 数据盘初始化（安全、幂等）
+
+- name: 创建 XFS 文件系统（如已存在会跳过）
+  filesystem:
+    fstype: xfs
+    dev: "{{ item.device }}"
+  loop: "{{ minio_disks }}"
+  ignore_errors: yes
+
+- name: 创建挂载目录
+  file:
+    path: "{{ item.mount }}"
+    state: directory
+    owner: "{{ minio_user }}"
+    group: "{{ minio_group }}"
+    mode: 0755
+  loop: "{{ minio_disks }}"
+
+- name: 挂载数据盘并写入 fstab
+  mount:
+    path: "{{ item.mount }}"
+    src: "{{ item.device }}"
+    fstype: xfs
+    opts: defaults,noatime
+    state: mounted
+  loop: "{{ minio_disks }}"
+
+## 4. systemd 服务
+
+- name: 部署 MinIO systemd 单元
+  template:
+    src: minio.service.j2
+    dest: /etc/systemd/system/minio.service
+    mode: 0644
+
+- name: 重新加载 systemd
+  systemd:
+    daemon_reload: yes
+
+- name: 启动并设置 MinIO 开机启动
+  systemd:
+    name: minio
+    state: started
+    enabled: yes
+
+#✅ 数据盘、fstab、systemd 全自动完成
+#✅ 重复执行不会破坏已有数据（幂等）

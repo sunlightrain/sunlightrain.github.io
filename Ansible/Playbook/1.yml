@@ -1,5 +1,6 @@
 
 ansible all -m ping
+ansible all -i /etc/ansible/hosts -m ping
 ansible -i /etc/ansible/hosts webservers -m shell -a 'pwd'
 ansible -i /etc/ansible/hosts webservers -m shell -a 'pwd chdir=/root/ccg'
 

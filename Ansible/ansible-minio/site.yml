@@ -1,0 +1,5 @@
+- name: Deploy MinIO Cluster
+  hosts: minio
+  become: yes
+  roles:
+    - minio
