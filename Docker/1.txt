@@ -7,4 +7,11 @@ redis:7-alpine                          ee64a64eaab6       60.1MB         17.2MB
 songxwn/netbox-cn-docker:4.0.3-2.9.9    51a4de46ec53       1.08GB          245MB    U
 valkey/valkey:8.1-alpine 
 
-c:\Users\x7020856\Downloads\Release_x64_Bin.zip
+
+UDP 53
+TCP/UDP 88
+TCP/UDP 389
+TCP 445
+TCP 135
+TCP 49152–65535
+UDP 123

@@ -1,0 +1,17 @@
+services:
+  caddy:
+    image: 10.68.37.208/library/vaultwarden/caddy:latest
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./certs:/certs
+    networks:
+      - netbox-docker_default
+
+networks:
+  netbox-docker_default:
+    external: true              # 使用现有 NetBox 网络

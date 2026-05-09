@@ -61,13 +61,13 @@ dlveeamVTL01-MGMT	10.68.47.231
 10.68.122.15	dlveeamVTL01
 10.68.47.231	dlveeamVTL01-MGMT
 
-
-PowerMax_04222
-PowerMax_00369
-Unity_06218
-PowerMax_04222
-
-
+root@dlisnvcsa01 [ ~ ]# nc -vz 10.68.121.7 636
+dl68csdc61.corp.hynix-dl.com [10.68.121.7] 636 (ldaps) open
+root@dlisnvcsa01 [ ~ ]# nc -vz 10.68.121.7 389
+dl68csdc61.corp.hynix-dl.com [10.68.121.7] 389 (ldap) open
+# 尤旭阳
+U22208@sk.com
+1a,IC8729s!
 
 -----------------------------------------------------------------
 git config --global user.name "Chen Xuewen"
@@ -103,6 +103,13 @@ nc -zv 10.0.0.5 22
 nc -zvu <IP> <PORT>
 
 nc -l 8080
+
+chronyc sources -v
+chronyc tracking
+# nmap UDP 扫描（推荐）
+nmap -sU -p 123 <ntp_server>
+# Windows 上如何测试 UDP NTP PowerShell
+w32tm /stripchart /computer:<ntp_server> /dataonly /samples:5
 
 ---
 subscription-manager register --username sunlightrain --password redhat@ba0104

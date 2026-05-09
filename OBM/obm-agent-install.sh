@@ -84,7 +84,8 @@ opcagt -status
 # ovconfchg -ns eaagt -set OPC_NODE_NAME <hostname>
 7、重启服务
 opcagt -cleanstart
------
+
+#-----
 ovcodautil -ping -n dlobm.skhynix-dl.com
 
 ovcodautil -ping -n dl68csdc61
@@ -93,7 +94,7 @@ ovcodautil -ping -n dl68csdc62
 ovpolicy -l -host dlisnsqldbdev02 -ovrg server
 ovpolicy -l -host dlbfroot01 -ovrg server
 
------
+#-----
 
 
 export PATH=$PATH:/opt/OV/bin

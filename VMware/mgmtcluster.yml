@@ -1,0 +1,109 @@
+#! ---------------------------------------------------------------------
+#! Basic cluster creation configuration
+#! ---------------------------------------------------------------------
+CLUSTER_NAME:
+CLUSTER_PLAN: <dev/prod>
+INFRASTRUCTURE_PROVIDER: vsphere
+ENABLE_CEIP_PARTICIPATION: <true/false>
+ENABLE_AUDIT_LOGGING: <true/false>
+CLUSTER_CIDR: 100.96.0.0/11
+SERVICE_CIDR: 100.64.0.0/13
+# CAPBK_BOOTSTRAP_TOKEN_TTL: 30m
+#! ---------------------------------------------------------------------
+#! vSphere configuration
+#! ---------------------------------------------------------------------
+VSPHERE_SERVER:
+VSPHERE_USERNAME:
+VSPHERE_PASSWORD:
+VSPHERE_DATACENTER:
+VSPHERE_RESOURCE_POOL:
+VSPHERE_DATASTORE:
+VSPHERE_FOLDER:
+VSPHERE_NETWORK: <tkg-management-network>
+VSPHERE_CONTROL_PLANE_ENDPOINT: #Leave blank as VIP network is configured in NSX ALB a
+nd IPAM is configured with VIP network
+# VSPHERE_TEMPLATE:
+VSPHERE_SSH_AUTHORIZED_KEY:
+VSPHERE_TLS_THUMBPRINT:
+VSPHERE_INSECURE: <true/false>
+DEPLOY_TKG_ON_VSPHERE7: true
+#! ---------------------------------------------------------------------
+#! Node configuration
+#! ---------------------------------------------------------------------
+# SIZE:
+# CONTROLPLANE_SIZE:
+# WORKER_SIZE:
+# OS_NAME: ""
+# OS_VERSION: ""
+# OS_ARCH: ""
+# VSPHERE_NUM_CPUS: 2
+# VSPHERE_DISK_GIB: 40
+# VSPHERE_MEM_MIB: 4096
+# VSPHERE_CONTROL_PLANE_NUM_CPUS: 2
+# VSPHERE_CONTROL_PLANE_DISK_GIB: 40
+# VSPHERE_CONTROL_PLANE_MEM_MIB: 8192
+# VSPHERE_WORKER_NUM_CPUS: 2
+# VSPHERE_WORKER_DISK_GIB: 40
+# VSPHERE_WORKER_MEM_MIB: 4096
+#! ---------------------------------------------------------------------
+#! NSX Advanced Load Balancer configuration
+#! ---------------------------------------------------------------------
+AVI_CA_DATA_B64:
+AVI_CLOUD_NAME:
+AVI_CONTROL_PLANE_HA_PROVIDER: <true/false>
+AVI_CONTROL_PLANE_NETWORK:
+AVI_CONTROL_PLANE_NETWORK_CIDR:
+AVI_CONTROLLER:
+AVI_DATA_NETWORK:
+AVI_DATA_NETWORK_CIDR:
+AVI_ENABLE: <true/false>
+AVI_LABELS:
+AVI_MANAGEMENT_CLUSTER_CONTROL_PLANE_VIP_NETWORK_CIDR:
+AVI_MANAGEMENT_CLUSTER_CONTROL_PLANE_VIP_NETWORK_NAME:
+AVI_MANAGEMENT_CLUSTER_SERVICE_ENGINE_GROUP:
+AVI_MANAGEMENT_CLUSTER_VIP_NETWORK_CIDR:
+AVI_MANAGEMENT_CLUSTER_VIP_NETWORK_NAME:
+AVI_PASSWORD: <base 64 encoded AVI password>
+AVI_SERVICE_ENGINE_GROUP:
+AVI_USERNAME:
+#! ---------------------------------------------------------------------
+#! Image repository configuration
+#! ---------------------------------------------------------------------
+TKG_CUSTOM_IMAGE_REPOSITORY: ""
+TKG_CUSTOM_IMAGE_REPOSITORY_SKIP_TLS_VERIFY: false
+TKG_CUSTOM_IMAGE_REPOSITORY_CA_CERTIFICATE: ""
+#! ---------------------------------------------------------------------
+#! Machine Health Check configuration
+#! ---------------------------------------------------------------------
+ENABLE_MHC:
+# ENABLE_MHC_CONTROL_PLANE: <true/false>
+# ENABLE_MHC_WORKER_NODE: <true/flase>
+#! ---------------------------------------------------------------------
+#! Identity management configuration
+#! ---------------------------------------------------------------------
+IDENTITY_MANAGEMENT_TYPE: "none"
+#! Settings for IDENTITY_MANAGEMENT_TYPE: "oidc"
+# CERT_DURATION: 2160h
+# CERT_RENEW_BEFORE: 360h
+# OIDC_IDENTITY_PROVIDER_CLIENT_ID:
+# OIDC_IDENTITY_PROVIDER_CLIENT_SECRET:
+# OIDC_IDENTITY_PROVIDER_GROUPS_CLAIM: groups
+# OIDC_IDENTITY_PROVIDER_ISSUER_URL:
+# OIDC_IDENTITY_PROVIDER_SCOPES: "email,profile,groups"
+# OIDC_IDENTITY_PROVIDER_USERNAME_CLAIM: email
+#! Settings for IDENTITY_MANAGEMENT_TYPE: "ldap"
+# LDAP_BIND_DN:
+# LDAP_BIND_PASSWORD:
+# LDAP_HOST:
+# LDAP_USER_SEARCH_BASE_DN:
+# LDAP_USER_SEARCH_FILTER:
+# LDAP_USER_SEARCH_USERNAME: userPrincipalName
+# LDAP_USER_SEARCH_ID_ATTRIBUTE: DN
+# LDAP_USER_SEARCH_EMAIL_ATTRIBUTE: DN
+# LDAP_USER_SEARCH_NAME_ATTRIBUTE:
+# LDAP_GROUP_SEARCH_BASE_DN:
+# LDAP_GROUP_SEARCH_FILTER:
+# LDAP_GROUP_SEARCH_USER_ATTRIBUTE: DN
+# LDAP_GROUP_SEARCH_GROUP_ATTRIBUTE:
+# LDAP_GROUP_SEARCH_NAME_ATTRIBUTE: cn
+# LDAP_ROOT_CA_DATA_B64:

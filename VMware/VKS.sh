@@ -102,3 +102,4 @@ tanzu plugin upload-bundle --tar ./plugin_bundle_tkg_latest.tar.gz --to-repo 10.
 
 tanzu plugin source update default --uri 10.68.37.208/tkgm-images/plugin-inventory:latest
 ---
+

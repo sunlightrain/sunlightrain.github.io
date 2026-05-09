@@ -1,0 +1,76 @@
+#! ---------------------------------------------------------------------
+#! Basic cluster creation configuration
+#! ---------------------------------------------------------------------
+CLUSTER_NAME: sfo01w01vc01
+CLUSTER_PLAN: prod
+INFRASTRUCTURE_PROVIDER: vsphere
+ENABLE_CEIP_PARTICIPATION: "true"
+ENABLE_AUDIT_LOGGING: "true"
+CLUSTER_CIDR: 100.96.0.0/11
+SERVICE_CIDR: 100.64.0.0/13
+# CAPBK_BOOTSTRAP_TOKEN_TTL: 30m
+#! ---------------------------------------------------------------------
+#! vSphere configuration
+#! ---------------------------------------------------------------------
+VSPHERE_SERVER: dldevvcsa01.corp.hynix-dl.com
+VSPHERE_USERNAME: administrator@vsphere.local
+VSPHERE_PASSWORD: DL@infra12!@
+VSPHERE_DATACENTER: /DLISNDEVDC
+VSPHERE_RESOURCE_POOL: /DLISNDEVDC/host/tkg-management-components/Resources/tkg-management-components
+VSPHERE_DATASTORE: /DLISNDEVDC/DLISNDEV-PMAX01-DSCL01-VMFS01
+VSPHERE_FOLDER: /DLISNDEVDC/Tanzu/tkg-management-components
+VSPHERE_NETWORK: /DLISNDEVDC/network/DLISNDEVDC-tkgmanagement
+VSPHERE_CONTROL_PLANE_ENDPOINT: #Leave blank as VIP network is configured in NSX ALB and IPAM is configured with VIP network
+# VSPHERE_TEMPLATE:
+VSPHERE_SSH_AUTHORIZED_KEY: ssh-rsa AAAA[...]== email@example.com
+VSPHERE_TLS_THUMBPRINT: DC:FA:81:1D:CA:08:21:AB:4E:15:BD:2B:AE:12:2C:6B:CA:65:49:B8
+VSPHERE_INSECURE: "false"
+DEPLOY_TKG_ON_VSPHERE7: true
+#! ---------------------------------------------------------------------
+#! Node configuration
+#! ---------------------------------------------------------------------
+OS_NAME: photon
+OS_VERSION: "3"
+OS_ARCH: amd64
+VSPHERE_CONTROL_PLANE_NUM_CPUS: 2
+VSPHERE_CONTROL_PLANE_DISK_GIB: 40
+VSPHERE_CONTROL_PLANE_MEM_MIB: 8192
+VSPHERE_WORKER_NUM_CPUS: 2
+VSPHERE_WORKER_DISK_GIB: 40
+VSPHERE_WORKER_MEM_MIB: 8192
+#! ---------------------------------------------------------------------
+#! NSX Advanced Load Balancer configuration
+#! ---------------------------------------------------------------------
+AVI_CA_DATA_B64: MIIC7zCCAdegAwIBAgIUJIeQf08YVL5xDry8V6b3sYotCDowDQYJKoZIhvcNAQELBQAwJzElMCMGA1UEAwwcZGxkZXZhbGIwMS5jb3JwLmh5bml4LWRsLmNvbTAeFw0yNjA0MjEwMjIyMTRaFw0yNzA0MjEwMjIyMTRaMCcxJTAjBgNVBAMMHGRsZGV2YWxiMDEuY29ycC5oeW5peC1kbC5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDMQyFakMC5JspAemAJ2zZzUKfKb6lsZ1iAV/Rbzd3epQLd9iYox0hGrfPXOClXr7deZmlkyUzoa8mNsXsuDuIEXCD2yJmr6jhoJ2TEWR8XYXhFuAQJh0YwPe5Ush22BQA1ri2iNSp3FmG2kQ9DRJiYf/gGYZ7rb87oPHn4Eba9OS1xN4CZU/93jAHomr/taEQsOuK4RL+02lemaJjScJHVx8ShlThJpqjEedi9zAG4B1UC8WuhreJA7uRSDCH0GDvMlpJ+UnqggycLj7WTN2kuVWNvvNBNPgniQef1dhiS/MTmpvBlf/vQIK1NkwzphR8oV4ipi0z68vy4XKXH42ulAgMBAAGjEzARMA8GA1UdEQQIMAaHBApEJdQwDQYJKoZIhvcNAQELBQADggEBABZhUfG66ht6q/lw/arTH2iYs33SexYzPfEqnKJ2Zx8V0oxgFb66ZPs6hyM8dto5s1O7x5cRPXHcjTzGlMcsZI1Sah6yWE0WTVTVhPF02X53cofjxvK7PvDlS/HqCukI/kXlhBmGtdJmmDOu7uwRck465FfN1vYGOQNSHNDMnTvCCrnpKfJZbqwiNBJXhNWSlcZY+kROBUWSk3kIk5qsig+IDkKKfJsvYCHhBaQBmmOrjIG6LJl35iV2D4aS1R0vqSgpyVIumbskYWff7fS/Xwk3rkz+zSsADRrlkya36SDlmCbJQs9V6juqUoybPnhBpSrcMKMd4kjrSMt8WYqHnG4=
+AVI_CLOUD_NAME: sfo01w01vc01
+AVI_CONTROL_PLANE_HA_PROVIDER: "true"
+AVI_CONTROL_PLANE_NETWORK: sfo01-w01-vds01-tkgclustervip
+AVI_CONTROL_PLANE_NETWORK_CIDR: 172.16.80.0/24
+AVI_CONTROLLER: sfo01albctlr01.sfo01.rainpole.local
+AVI_DATA_NETWORK: sfo01-w01-vds01-tkgworkloadvip
+AVI_DATA_NETWORK_CIDR: 172.16.70.0/24
+AVI_ENABLE: "true"
+AVI_LABELS:
+AVI_MANAGEMENT_CLUSTER_CONTROL_PLANE_VIP_NETWORK_CIDR: 172.16.80.0/24
+AVI_MANAGEMENT_CLUSTER_CONTROL_PLANE_VIP_NETWORK_NAME: sfo01-w01-vds01-tkgclustervip
+AVI_MANAGEMENT_CLUSTER_SERVICE_ENGINE_GROUP: sfo01m01segroup01
+AVI_MANAGEMENT_CLUSTER_VIP_NETWORK_CIDR: 172.16.50.0/24
+AVI_MANAGEMENT_CLUSTER_VIP_NETWORK_NAME: sfo01-w01-vds01-tkgmanagementvip
+AVI_PASSWORD: <encoded:Vk13YXJlMSE=>
+AVI_SERVICE_ENGINE_GROUP: sfo01w01segroup01
+AVI_USERNAME: admin
+#! ---------------------------------------------------------------------
+#! Image repository configuration
+#! ---------------------------------------------------------------------
+TKG_CUSTOM_IMAGE_REPOSITORY: "harbor-sa.lab.vmw/tkg-160"
+TKG_CUSTOM_IMAGE_REPOSITORY_SKIP_TLS_VERIFY: false
+TKG_CUSTOM_IMAGE_REPOSITORY_CA_CERTIFICATE: LS0t[...]tLS0tLQ==
+#! ---------------------------------------------------------------------
+#! Machine Health Check configuration
+#! ---------------------------------------------------------------------
+ENABLE_MHC: true
+#! ---------------------------------------------------------------------
+#! Identity management configuration
+#! ---------------------------------------------------------------------
+IDENTITY_MANAGEMENT_TYPE: "none"
+#! ---------------------------------------------------------------------

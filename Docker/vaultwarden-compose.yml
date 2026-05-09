@@ -10,6 +10,7 @@ services:
     ports:
       - 80:80
 
+# Production Caddy
 ---
 version: "3"
 
