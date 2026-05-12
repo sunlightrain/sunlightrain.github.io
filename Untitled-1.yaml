@@ -1,0 +1,95 @@
+2026-04-10T00:56:01.593Z In(182) vmkernel: cpu90:2098099)bnxtnet: bnxtnet_display_link:2963: [vmnic0 : 0x452106e8a000] NIC Link is down
+2026-04-10T00:56:01Z In(182) vmkernel:
+2026-04-10T00:56:01.593Z In(182) vmkernel: cpu90:2098099)netschedHClk: NetSchedHClkNotify:4749: vmnic0: link down notification
+2026-04-10T00:56:07.367Z In(182) vmkernel: cpu90:2098099)bnxtnet: bnxtnet_display_link:2959: [vmnic0 : 0x452106e8a000] NIC Link is Up, 25000 Mbps (NRZ) full duplex, Flow control: none
+2026-04-10T00:56:07Z In(182) vmkernel:
+2026-04-10T00:56:07.367Z In(182) vmkernel: cpu90:2098099)netschedHClk: NetSchedHClkNotify:4741: vmnic0: link up notification
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu1:3072650)netschedHClk: NetSchedHClkWatchdogSysWorld:6617: vmnic0: link up event received, device running at 25000 Mbps so setting queue depth to 216216 bytes with expected 3276 bytes/us
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)NetqueueBal: 5211: vmnic0: device Up notification, reset logical space needed
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkPortQuiesce:7271: vmnic4: received a force quiesce for port 0x8a000021
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)Uplink: 12409: vmnic0: clear flags 0x4bc0e DEVICE_SCHED_CONNECTED
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)Uplink: 12498: vmnic0: set flags 0x4ba0e DEVICE_SCHED_CONNECTED
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu18:3831011)NetPort: 708: Failed to acquire port non-exclusive lock 0xa00007b[Failure].
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)NetPort: 1887: disabled port 0x8a000021
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)Uplink: 12409: vmnic0: clear flags 0x4b80e DEVICE_SCHED_CONNECTED
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)Uplink: 12498: vmnic0: set flags 0x4ba06 DEVICE_SCHED_CONNECTED
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)Uplink: 13030: The default queue id for vmnic0 is 0x1244000.
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)NetPort: 3130: resuming traffic on DV port 40
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)Uplink: 12409: vmnic0: clear flags 0x4b806 DEVICE_SCHED_CONNECTED
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkConnect:7537: vmnic0: do not enable multiple queue since we cannot have more than one tx queue
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkConnect:7573: vmnic0: enable hclk multiple queue for vnics and vmknics
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkCreateQueue:5404: vmnic0: look up for vm leaf pool tag gave out 1
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkCreateQueue:5404: vmnic0: look up for vm leaf pool tag gave out 0
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkNotify:4741: vmnic0: link up notification
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)Uplink: 12498: vmnic0: set flags 0x4be06 DEVICE_SCHED_CONNECTED
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkCreateQueue:5404: vmnic0: look up for vm leaf pool tag gave out 7
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkCreateQueue:5404: vmnic0: look up for vm leaf pool tag gave out 6
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkCreateQueue:5404: vmnic0: look up for vm leaf pool tag gave out 3
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkCreateQueue:5404: vmnic0: look up for vm leaf pool tag gave out 2
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkCreateQueue:5404: vmnic0: look up for vm leaf pool tag gave out 4
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkCreateQueue:5404: vmnic0: look up for vm leaf pool tag gave out 5
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkCreateQueue:5404: vmnic0: look up for vm leaf pool tag gave out 8
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkCreateQueue:5404: vmnic0: look up for vm leaf pool tag gave out 9
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkCreateQueue:5404: vmnic0: look up for vm leaf pool tag gave out 10
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkCreateQueue:5404: vmnic0: look up for vm leaf pool tag gave out 11
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkCreateQueue:5404: vmnic0: look up for vm leaf pool tag gave out 12
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkCreateQueue:5362: vmnic0: Multiple vnic queue not enabled on port 167772283 for pool netsched.pools.vm.167772283, no multiple tx vnic world being in use
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)netschedHClk: NetSchedHClkCreateQueue:5404: vmnic0: look up for vm leaf pool tag gave out 167772283
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)Uplink: 13042: enabled port 0x8a000021 with mac d4:04:e6:e2:b5:60
+2026-04-10T00:56:08.306Z In(182) vmkernel: cpu36:2097581)Uplink: 3221: vmnic0: clear flags 0x4be06 DEVICE_ENS_FLAGS
+
+2026-04-10T00:56:08.311Z In(182) vmkernel: cpu18:33220569)netschedHClk: NetSchedHClkWatchdogSysWorld:6617: vmnic0: link up event received, device running at 25000 Mbps so setting queue depth to 216216 bytes with expected 3276 bytes/us
+2026-04-10T00:56:08.588Z In(182) vmkernel: cpu31:2097581)Uplink: 536: vmnic0: Driver claims supporting 60 RX queues, and 60 queues are accepted.
+2026-04-10T00:56:08.588Z In(182) vmkernel: cpu31:2097581)Uplink: 532: vmnic0: Driver claims supporting 72 TX queues, and 72 queues are accepted.
+2026-04-10T00:56:08.588Z In(182) vmkernel: cpu31:2097581)NetqueueBal: 2418: vmnic0: Requesting 3 RSS sec queues for engine type 1
+2026-04-10T00:56:08.589Z In(182) vmkernel: cpu31:2097581)NetqueueBal: 3033: vmnic0: LRO on RSS enabled
+2026-04-10T00:56:08.589Z In(182) vmkernel: cpu31:2097581)NetqueueBal: 3191: vmnic0: rxQueueCount=60, rxFiltersPerQueue=8, txQueueCount=72 rxQueuesFeatures=0x583
+2026-04-10T00:56:08.589Z In(182) vmkernel: cpu31:2097581)netschedHClk: NetSchedHClkPortQuiesce:7271: vmnic4: received a force quiesce for port 0x8a000021
+2026-04-10T00:56:08.590Z In(182) vmkernel: cpu31:2097581)Uplink: 12409: vmnic0: clear flags 0x4bc0e DEVICE_SCHED_CONNECTED
+2026-04-10T00:56:08.590Z In(182) vmkernel: cpu31:2097581)Uplink: 12498: vmnic0: set flags 0x4ba0e DEVICE_SCHED_CONNECTED
+2026-04-10T00:56:08.590Z In(182) vmkernel: cpu31:2097581)NetPort: 1887: disabled port 0x8a000021
+2026-04-10T00:56:08.590Z In(182) vmkernel: cpu31:2097581)Uplink: 12409: vmnic0: clear flags 0x4b80e DEVICE_SCHED_CONNECTED
+2026-04-10T00:56:08.590Z In(182) vmkernel: cpu83:33220570)NetSched: 724: vmnic0-0-tx: worldID = 33220570 exits
+2026-04-10T00:56:08.590Z In(182) vmkernel: cpu31:2097581)Uplink: 12498: vmnic0: set flags 0x4ba06 DEVICE_SCHED_CONNECTED
+2026-04-10T00:56:08.590Z In(182) vmkernel: cpu31:2097581)Uplink: 13030: The default queue id for vmnic0 is 0x1244000.
+2026-04-10T00:56:08.590Z In(182) vmkernel: cpu31:2097581)NetPort: 3130: resuming traffic on DV port 40
+2026-04-10T00:56:08.590Z In(182) vmkernel: cpu9:33220571)NetSched: 724: vmnic0-0-tx: worldID = 33220571 exits
+2026-04-10T00:56:08.590Z In(182) vmkernel: cpu31:2097581)Uplink: 12409: vmnic0: clear flags 0x4b806 DEVICE_SCHED_CONNECTED
+2026-04-10T00:56:08.590Z In(182) vmkernel: cpu84:33220572)NetSched: 724: vmnic0-1-tx: worldID = 33220572 exits
+2026-04-10T00:56:08.590Z In(182) vmkernel: cpu1:33220574)NetSched: 724: vmnic0-3-tx: worldID = 33220574 exits
+2026-04-10T00:56:08.590Z In(182) vmkernel: cpu31:2097581)NetSched: 1180: Asked for 73 queues but sched hclk only support 16 queues
+2026-04-10T00:56:08.590Z In(182) vmkernel: cpu76:33220573)NetSched: 724: vmnic0-2-tx: worldID = 33220573 exits
+2026-04-10T00:56:08.590Z In(182) vmkernel: cpu31:2097581)netschedHClk: NetSchedHClkConnect:7542: vmnic0: enable hclk multiple queue with 2 queues
+2026-04-10T00:56:08.590Z In(182) vmkernel: cpu31:2097581)netschedHClk: NetSchedHClkConnect:7573: vmnic0: enable hclk multiple queue for vnics and vmknics
+
+---
+
+[root@dlisnesxi12:~] esxcli network nic get -n vmnic0
+   Advertised Auto Negotiation: true
+   Advertised Link Modes: 1000BaseSR/Full, 25000BaseSR/Full, Auto
+   Auto Negotiation: true
+   Backing DPUId: N/A
+   Cable Type: FIBRE
+   Current Message Level: 0
+   Driver Info:
+         Bus Info: 0000:26:00:0
+         Driver: bnxtnet
+         Firmware Version: 230.0.168.0 /pkg 230.1.123.0
+         Version: 230.0.136.0
+   Link Detected: true
+   Link Status: Up
+   Name: vmnic0
+   PHYAddress: 1
+   Pause Autonegotiate: true
+   Pause RX: true
+   Pause TX: true
+   Supported Ports: FIBRE
+   Supports Auto Negotiation: true
+   Supports Pause: true
+   Supports Wakeon: false
+   Transceiver: internal
+   Virtual Address: 00:50:56:57:cf:5e
+   Wakeon: None
+[root@dlisnesxi12:~]
+
+
