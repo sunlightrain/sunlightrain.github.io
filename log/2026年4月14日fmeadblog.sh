@@ -1,6 +1,6 @@
 
 #------------------------
-#3 检查NTP DNS YUM
+#1 检查NTP DNS YUM
 #------------------------
 # YUM源配置
 cat /etc/yum.repos.d/local-repo.repo

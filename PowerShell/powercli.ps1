@@ -39,6 +39,12 @@ Get-Datastore                  # Show storage
 Get-Cluster                    # Show clusters
 Get-VM | Where PowerState -eq "PoweredOff"
 
+#-----
+#如何查询ESXi主机的物理网络适配器及其MTU值？
+Get-VMHostNetworkAdapter -VMHost dlisnesxi05.corp.hynix-dl.com -Physical |
+Select VMHost, Name, Mtu
+
+dlisnesxi05.corp.hynix-dl.com
 
 
 ---------------

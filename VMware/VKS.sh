@@ -103,3 +103,156 @@ tanzu plugin upload-bundle --tar ./plugin_bundle_tkg_latest.tar.gz --to-repo 10.
 tanzu plugin source update default --uri 10.68.37.208/tkgm-images/plugin-inventory:latest
 ---
 
+
+
+vcf context list		
+vcf context create supervisor --insecure-skip-tls-verify --type k8s --endpoint https://10.68.230.104 -u administrator@vsphere.local		
+		
+vcf contest use supervisor:[namespace]		
+vcf context list		
+kubectl get kr		
+kubectl get virtualmachineclasses -n [namespace]		
+ cat ~/cert/ca.crt		
+cp ~/yaml/cluster-deploy.yaml ~/yaml/cluster-depoly.bak		
+vi ~/yaml/cluster-deploy.yaml		
+vcf context list		
+kubectl apply -f ~/yaml/cluster-deply.yaml -n [namespace]		
+kubectl get machine -n [namespace]		
+kubectl get cluster -n [namespace]		
+kubectl get kcp -n [namespace]		
+kubectl get machine -n [namespace]		
+ vcf context create [context] --insecure-skip-tls-verify --type k8s --endpoint https://10.68.230.104 -u administrator@vsphere.local --workload-cluster-name [cluster name] --workload-cluster-namespace [namespace]		
+vcf context use [context]:[cluster-name]		
+vcf context refresh [context]:[cluster-name] --insecure-skip-tls-verify		
+vcf context list		
+kubectl get nodes		
+
+##===========================================##
+# lab-yml
+
+vcf context create k8s01 --insecure-skip-tls-verify --type k8s --endpoint https://10.68.230.104 -u administrator@vsphere.local --workload-cluster-name k8s01-yml --workload-cluster-namespace k8s01-ns
+vcf context use k8s01:k8s01-yml
+vcf context refresh k8s01:k8s01-yml --insecure-skip-tls-verify
+vcf context list		
+kubectl get nodes
+##===========================================##
+##===========================================##
+# lab-lci
+vcf context create k8s01-lci --insecure-skip-tls-verify --type k8s --endpoint https://10.68.230.104 -u administrator@vsphere.local --workload-cluster-name k8s01-lci --workload-cluster-namespace k8s01-ns
+vcf context use k8s01-lci:k8s01-lci
+vcf context list
+vcf context refresh k8s01-lci:k8s01-lci --insecure-skip-tls-verify	
+kubectl config current-context
+#创建k8s命名空间
+kubectl create ns bookinfo
+kubectl label --overwrite ns bookinfo pod-security.kubernetes.io/enforce=baseline
+# Create the namespace
+kubectl create ns bookinfo
+
+# Explicitly Set PSA to baseline
+kubectl label --overwrite ns bookinfo pod-security.kubernetes.io/enforce=baseline
+
+# Label for SIDECAR
+kubectl label namespace bookinfo istio-injection=enabled
+
+# Alternatively label for AMBIENT
+kubectl label namespace bookinfo istio.io/dataplane-mode=ambient
+
+cd ~/istio
+kubectl apply -f bookinfo.yaml -n bookinfo
+kubectl -n bookinfo get pods		
+kubectl get pods,svc -n bookinfo
+
+kubectl -n bookinfo exec "$(kubectl -n bookinfo get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}')" -c ratings -- curl -sS productpage:9080/productpage | grep title
+##===========================================##
+# Check that the webpage is being served 
+kubectl -n bookinfo exec \
+"$(kubectl -n bookinfo get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}')" -c ratings -- curl -sS productpage:9080/productpage | grep title
+
+<title>Simple Bookstore App</title>
+##===========================================##
+
+
+kubectl apply -f bookinfo-gateway.yaml -n bookinfo
+
+kubectl get pods,gateway -n bookinfo
+cd ~/istio/istio-1.29.2/
+kubectl apply -f samples/addons/
+##===========================================##
+##===========================================##
+
+vcf context refresh [context]:[username]-lci-cluster --insecure-skip-tls-verify		
+kubectl config use-context [context]:[username]-lci-cluster		
+kubectl config current-context		
+kubectl create ns bookinfo		
+#kubectl label --overwrite ns bookinfo pod-security,kubernetes.io/enforce=baseline		
+#kubectl label namespace bookinfo istio -injection=enabled		
+cd ~/istio		
+kubectl apply -f bookinfo.yaml -n bookinfo		
+kubectl -n bookinfo get pods		
+kubectl get pods,svc -n bookinfo
+
+kubectl -n bookinfo exec "${kubectl -n bookinfo get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}')" -c ratings -- curl -sS productpage:9080/productpage | grep title		
+kubectl apply -f bookinfo-gateway.yaml -n bookinfo		
+kubectl get pods,gateway -n bookinfo		
+cd ~/istio/istio-1.29.2/		
+kubectl apply -f samples/addons/		
+vi kiali-gateway.yaml		
+cd ~/istio/istio-1.29.2/		
+kubectl apply -f samples/bookinfo/platform/kube/bookinfo-versions.yaml -n bookinfo		
+kubectl apply -f samples/bookinfo/gateway-api/route-reviews-v1.yaml -n bookinfo		
+kubectl apply -f samples/bookinfo/gateway-api/route-reviews-50-v3.yaml -n bookinfo		
+kubectl get gateway -n bookinfo		
+kubectl get gateway -n istio-system		
+		
+kubect; apply -f samples/bookinfo/gateway-api/route-reviews-v3.yaml -n bookinfo		
+
+
+
+##===========================================##
+kubectl apply -f - <<EOF
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: bookinfo-gateway
+  namespace: bookinfo
+spec:
+  gatewayClassName: istio
+  listeners:
+  - name: http
+    port: 80
+    protocol: HTTP
+    allowedRoutes:
+      namespaces:
+        from: Same
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: bookinfo-route
+  namespace: bookinfo
+spec:
+  parentRefs:
+  - name: bookinfo-gateway
+  rules:
+  - matches:
+    - path:
+        type: Exact
+        value: /productpage
+    - path:
+        type: PathPrefix
+        value: /static
+    - path:
+        type: Exact
+        value: /login
+    - path:
+        type: Exact
+        value: /logout
+    - path:
+        type: PathPrefix
+        value: /api/v1/products
+    backendRefs:
+    - name: productpage
+      port: 9080
+EOF
+##===========================================##

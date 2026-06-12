@@ -3,6 +3,8 @@
 Connect-VIServer -Server "dlisnvcsa01.corp.hynix-dl.com" -Protocol "https" -User "administrator@vsphere.local" -Password "DL@infra12!@"
 # dev
 Connect-VIServer -Server "dldevvcsa01.corp.hynix-dl.com" -Protocol "https" -User "administrator@vsphere.local" -Password "DL@infra12!@"
+# VCF9-dev
+Connect-VIServer -Server "vc-mgmt-a.corp.hynix-dl.dev" -Protocol "https" -User "administrator@vsphere.local" -Password "P@ssw0rd123!@#$"
 #✅ 忽略证书警告 ✅ 关闭 CEIP 提示
 Set-PowerCLIConfiguration -Scope User -ParticipateInCEIP $false -Confirm:$false
 
