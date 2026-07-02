@@ -182,3 +182,23 @@ SG-App-FFDC-Prod-WAS
 
 dlnetbox	10.68.38.81
 dlbitwarden01	10.68.37.210 🆗
+
+
+Get-ADComputer dlkms01 | Select-Object DistinguishedName
+Get-ADComputer dlkms02 | Select-Object DistinguishedName
+
+Get-ADComputer dlveempmis03 | Select-Object DistinguishedName
+Get-ADComputer dlveempmis04 | Select-Object DistinguishedName
+Get-ADComputer dlveempmis05 | Select-Object DistinguishedName
+Get-ADComputer dlveempmis06 | Select-Object DistinguishedName
+Get-ADComputer dlveempsec03 | Select-Object DistinguishedName
+Get-ADComputer dlveempsec04 | Select-Object DistinguishedName
+Get-ADComputer dlveempmfg03 | Select-Object DistinguishedName
+
+dlveempmis03
+dlveempmis04
+dlveempmis05
+dlveempmis06
+dlveempsec03
+dlveempsec04
+dlveempmfg03

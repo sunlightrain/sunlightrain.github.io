@@ -193,6 +193,7 @@ kubectl -n bookinfo get pods
 kubectl get pods,svc -n bookinfo
 
 kubectl -n bookinfo exec "${kubectl -n bookinfo get pod -l app=ratings -o jsonpath='{.items[0].metadata.name}')" -c ratings -- curl -sS productpage:9080/productpage | grep title		
+
 kubectl apply -f bookinfo-gateway.yaml -n bookinfo		
 kubectl get pods,gateway -n bookinfo		
 cd ~/istio/istio-1.29.2/		
@@ -256,3 +257,6 @@ spec:
       port: 9080
 EOF
 ##===========================================##
+
+
+## 

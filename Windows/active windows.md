@@ -20,6 +20,33 @@ tnc dlkms.hynix-dl.com -port 1688
 tnc dlkms01.corp.hynix-dl.com -port 1688
 tnc dlkms02.corp.hynix-dl.com -port 1688
 
+
+###----------------------
+## DEV env
+10.68.38.111
+#DEV env 未加域激活：
+tnc 10.68.38.111 -port 1688
+slmgr /dlv
+# 2️⃣ 设置 KMS 服务器地址
+slmgr /skms 10.68.38.111:1688
+# 3️⃣ 执行激活
+slmgr /ato
+# 4️⃣ 查看激活状态
+slmgr /xpr
+# 查看kms地址
+slmgr /dli
+
+# 查询时间同步
+w32tm /query /status
+# 配置NTP Server
+w32tm /config /manualpeerlist:"10.68.121.7" /syncfromflags:manual /update
+# 同步时间 ✅
+w32tm /resync
+# 查询时间同步
+w32tm /query /status
+###----------------------
+
+
 ##-----------------------
 ## 在已加入域的 Windows Server 2022 主机上安全重命名的做法
 # 先改计算机名 → 自动在域里更新对象 → 重启 → 校验 DNS/AD 记录与依赖服务。

@@ -196,6 +196,14 @@ parted /dev/$disk mklabel gpt
 parted /dev/$disk mkpart primary "1 -1"
 done
 #------------------------
+
+#------------------------
+#node2
+for disk in sdc sdd sde sdf sdg sdh sdi sdj sdk sdl sdm sdn sdo sdp sdq;
+do
+partprobe /dev/$disk
+done
+#------------------------
 #--OS 参数
 #------------------------
 kernel.sem                        250 32000 100 1024 #ok    

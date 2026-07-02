@@ -152,3 +152,10 @@ PowerShell.exe (New-Object -ComObject Microsoft.Update.AutoUpdate).DetectNow()
 sc queryex wuauserv
 
 taskkill /PID 21324 /f
+
+
+# 客户端查看更新服务器
+reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
+# 或者
+Get-ItemProperty `
+HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate

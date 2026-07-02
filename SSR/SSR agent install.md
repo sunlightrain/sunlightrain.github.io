@@ -12,5 +12,5 @@ wget -d -r -np -nd http://10.68.37.105/iso/app/linux/ssr/1.0/ -P /tmp/ssr/1.0/
 1、Download
 .\wget.exe -d -r -np -nd http://10.68.37.105/iso/app/windows/ssr/1.0/ -P c:\temp\ssr\1.0\
 2、安装右键管理员身份运行CMD，导航到C:\Temp\ssr\1.0
-Install.bat 2 0 C:\SSR
+.\Install.bat 2 0 C:\SSR
 ---
