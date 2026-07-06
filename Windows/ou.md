@@ -195,10 +195,7 @@ Get-ADComputer dlveempsec03 | Select-Object DistinguishedName
 Get-ADComputer dlveempsec04 | Select-Object DistinguishedName
 Get-ADComputer dlveempmfg03 | Select-Object DistinguishedName
 
-dlveempmis03
-dlveempmis04
-dlveempmis05
-dlveempmis06
-dlveempsec03
-dlveempsec04
-dlveempmfg03
+Get-ADComputer dlprintdb01 | Select-Object DistinguishedName
+Get-ADComputer dlprintdb02 | Select-Object DistinguishedName
+Get-ADComputer dlprintweb01 | Select-Object DistinguishedName
+Get-ADComputer dlprintweb02 | Select-Object DistinguishedName
