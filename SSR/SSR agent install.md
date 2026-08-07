@@ -9,7 +9,7 @@ wget -d -r -np -nd http://10.68.37.105/iso/app/linux/ssr/1.0/ -P /tmp/ssr/1.0/
 
 
 ---
-```
+```ps1
 # windows
 1、Download
 .\wget.exe -d -r -np -nd http://10.68.37.105/iso/app/windows/ssr/1.0/ -P c:\temp\ssr\1.0\
@@ -17,7 +17,7 @@ wget -d -r -np -nd http://10.68.37.105/iso/app/linux/ssr/1.0/ -P /tmp/ssr/1.0/
 .\Install.bat 2 0 C:\SSR
 ```
 ---
-```
+```bash
 # Linux
 1. Download #原文件应该是无锡的安装包已重命名，并更换为大连的SSR安装包。
 wget -d -r -np -nd http://10.68.37.105/iso/app/linux/ssr/1.0/ -P /tmp/ssr/1.0/
