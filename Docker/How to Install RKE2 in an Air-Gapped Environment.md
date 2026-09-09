@@ -1,12 +1,14 @@
 Air-gapped environments are isolated networks with no direct internet access, commonly used in government, defense, financial, and healthcare sectors for security reasons. Installing RKE2 in an air-gapped environment requires pre-downloading all necessary artifacts and setting up a private registry. This guide covers the complete air-gapped installation process.
-#Prerequisites
+# Prerequisites
 - A machine with internet access for downloading artifacts
 - A private container registry (Harbor, Nexus, or similar)
 - A file server or shared storage accessible by all cluster nodes
 - A fixed registration address (load balancer, DNS name, or virtual IP) for multi-server clusters
 - Linux nodes (Ubuntu, CentOS, Rocky Linux, etc.) with no internet access
 - SSH access to all nodes
-#Step 1: Download RKE2 Artifacts on an Internet-Connected Machine
+
+---
+# Step 1: Download RKE2 Artifacts on an Internet-Connected Machine
 ```bash
 # Set the RKE2 version to download
 
@@ -34,7 +36,7 @@ sha256sum -c sha256sum-amd64.txt --ignore-missing
 echo "All artifacts downloaded successfully"
 ls -lh ~/rke2-artifacts/
 ```
-#Step 2: Transfer Artifacts to Air-Gapped Nodes
+# Step 2: Transfer Artifacts to Air-Gapped Nodes
 ```bash
 # Copy artifacts to each server node
 # Using scp (or rsync for large files)
@@ -61,7 +63,7 @@ for WORKER in worker1 worker2 worker3; do
     "$WORKER:~/rke2-artifacts/"
 done
 ```
-#Step 3: Install RKE2 on Air-Gapped Nodes
+# Step 3: Install RKE2 on Air-Gapped Nodes
 ```bash
 # On each server node - Run the installation in air-gapped mode
 # The INSTALL_RKE2_ARTIFACT_PATH tells the installer to use local files
@@ -85,7 +87,7 @@ sudo env INSTALL_RKE2_ARTIFACT_PATH="${ARTIFACT_DIR}" \
 
 echo "RKE2 installed from local artifacts"
 ```
-#Step 4: Configure Private Registry
+# Step 4: Configure Private Registry
 ```bash
 # Create registries.yaml on every server and worker node to use a private registry mirror
 sudo mkdir -p /etc/rancher/rke2/
@@ -120,7 +122,7 @@ configs:
       password: "registry-password"
 EOF
 ```
-#Step 5: Configure and Start RKE2 Servers and Agents
+# Step 5: Configure and Start RKE2 Servers and Agents
 ```bash
 # On the first server node, create the RKE2 server configuration.
 sudo mkdir -p /etc/rancher/rke2/
@@ -178,7 +180,7 @@ EOF
 sudo systemctl enable rke2-agent.service
 sudo systemctl start rke2-agent.service
 ```
-#Step 6: Install Helm Charts in Air-Gapped Mode
+# Step 6: Install Helm Charts in Air-Gapped Mode
 ```bash
 # Download Helm charts on internet-connected machine
 RANCHER_VERSION="2.13.3"
@@ -204,7 +206,7 @@ helm install rancher ~/rancher-${RANCHER_VERSION}.tgz \
   --set systemDefaultRegistry=registry.internal.example.com \
   --set useBundledSystemChart=true
   ```
-  #Step 7: Synchronize Images to Private Registry
+# Step 7: Synchronize Images to Private Registry
   ```bash
   # Script to sync required images to private registry
 # Run on an internet-connected machine with access to the private registry
@@ -234,5 +236,5 @@ EOF
 
 chmod +x sync-images.sh
 ```
-#Conclusion
+# Conclusion
 Installing RKE2 in an air-gapped environment requires careful preparation and planning, but the process is well-documented and reliable once you have all artifacts prepared. The key success factors are: pre-downloading all container images, setting up a private registry mirror for ongoing operations, and ensuring the RKE2 configuration points to your internal infrastructure. Air-gapped RKE2 clusters can be fully managed by an on-premises Rancher installation, providing the same capabilities as internet-connected deployments.
