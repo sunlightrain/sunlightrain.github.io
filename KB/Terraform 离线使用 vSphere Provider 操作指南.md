@@ -32,13 +32,17 @@ mkdir -p ~/.terraform.d/plugin*/registry.terraform.io/hashicorp/vSphere/2.12.0/l
 ```
 目录结构
 ```text
-~/.terraform.d/plugin*/
-└── registry.terraform.io
-    └*─*hashicorp
-        └── vsphere
-    *       └── 2.12.0
-                *── linux_amd64
-                   *└── terraform-provider-vsphere_v2.*2.0_x5
+[root@dldevansible01 .terraform.d]# tree
+.
+├── checkpoint_signature
+└── plugins
+    └── registry.terraform.io
+        └── hashicorp
+            └── vsphere
+                └── 2.12.0
+                    └── linux_amd64
+                        └── terraform-provider-vsphere_v2.12.0_x5
+
 ```
 ## Terraform 配置
 main.tf：
