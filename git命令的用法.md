@@ -28,6 +28,10 @@ git push
 ```bash
 git config --global user.name "Chen"
 git config --global user.email "chen@example.com"
+
+git config --global user.name "Chen Xuewen"​‌
+git config --global user.email "X7020856@dl.skhynix.com"
+
 # 查看配置：
 git config --list
 ```
